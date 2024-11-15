@@ -8,7 +8,6 @@ describe("CreateUserUseCase", () => {
   let createUserUseCase: CreateUserUseCase;
 
   beforeEach(() => {
-    // Mock the UserRepository
     userRepository = {
       findByEmail: vi.fn(),
       save: vi.fn(),
@@ -24,7 +23,6 @@ describe("CreateUserUseCase", () => {
       password: "password123",
     };
 
-    // Mock the repository methods
     vi.mocked(userRepository.findByEmail).mockResolvedValue(null);
     vi.mocked(userRepository.save).mockImplementation(async (user) => user);
 
@@ -56,7 +54,6 @@ describe("CreateUserUseCase", () => {
       password: "password123",
     };
 
-    // Mock that a user already exists
     vi.mocked(userRepository.findByEmail).mockImplementation(async (email) => {
       if (email === "john@example.com") {
         return User.with({
