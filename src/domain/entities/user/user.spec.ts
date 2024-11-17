@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { User } from "./user";
+import { PasswordService } from "../../../shared/services/password-service";
 
 describe("User Entity", () => {
   const email = "test@gmail.com";
@@ -27,7 +28,7 @@ describe("User Entity", () => {
       email: "joe.doe@gmail.com",
 
       name: "Joe Doe",
-      password: await User.hashPassword("123456"),
+      password: await PasswordService.hashPassword("123456"),
     });
 
     const updatedUser = await User.update(user, updates);
@@ -57,22 +58,17 @@ describe("User Entity", () => {
       name,
     });
 
-    const isMatch = await user.comparePassword(password);
-    const isNotMatch = await user.comparePassword("wrong-password");
+    const isMatch = await PasswordService.comparePassword(
+      password,
+      user.password
+    );
+    const isNotMatch = await PasswordService.comparePassword(
+      "wrong-password",
+      user.password
+    );
 
     expect(isMatch).toBe(true);
     expect(isNotMatch).toBe(false);
-  });
-
-  it("should return a user without password", () => {
-    const user = User.withoutPassword({
-      id: "1",
-      email,
-      password,
-      name,
-    });
-
-    expect(user).not.toHaveProperty("password");
   });
 
   it("should throw an error if email is invalid", async () => {

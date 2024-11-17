@@ -1,4 +1,4 @@
-import { v4 as uuid } from "uuid";
+import { UuidService } from "../../../shared/services/uuid-service";
 import { ExpenseCategory } from "./expense-category";
 
 interface ExpenseProps {
@@ -20,10 +20,10 @@ export class Expense {
     date,
     userId,
   }: Omit<ExpenseProps, "id">) {
-    this.validate(amount, date, category);
+    this.validate(amount, date, category, description);
 
     return new Expense({
-      id: uuid(),
+      id: UuidService.generate(),
       amount,
       description,
       category,
@@ -39,7 +39,8 @@ export class Expense {
   private static validate(
     amount: number,
     date: Date,
-    category: ExpenseCategory
+    category: ExpenseCategory,
+    description: string
   ) {
     if (!this.isValidAmount(amount)) {
       throw new Error("Amount must be positive");
@@ -51,6 +52,10 @@ export class Expense {
 
     if (!this.isValidCategory(category)) {
       throw new Error("Invalid category");
+    }
+
+    if (!this.isValidDescription(description)) {
+      throw new Error("Description must be less than 50 characters");
     }
   }
 
@@ -64,6 +69,10 @@ export class Expense {
 
   private static isValidCategory(category: ExpenseCategory) {
     return Object.values(ExpenseCategory).includes(category);
+  }
+
+  private static isValidDescription(description: string) {
+    return description.length <= 50;
   }
 
   get id() {

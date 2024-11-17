@@ -1,3 +1,4 @@
+import { PasswordService } from './../../../shared/services/password-service';
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { UserRepository } from "../../../domain/interfaces/user-repository";
 import { TokenGenerator } from "../../../domain/interfaces/token-generator";
@@ -34,7 +35,7 @@ describe("AuthenticateUserUseCase", () => {
       password: "123456",
     };
 
-    const hashedPassword = await User.hashPassword(input.password);
+    const hashedPassword = await PasswordService.hashPassword(input.password);
 
     vi.mocked(userRepository.findByEmail).mockImplementation(async () =>
       User.with({
@@ -73,7 +74,7 @@ describe("AuthenticateUserUseCase", () => {
       password: "invalid-password",
     };
 
-    const hashedPassword = await User.hashPassword("123456");
+    const hashedPassword = await PasswordService.hashPassword("123456");
 
     vi.mocked(userRepository.findByEmail).mockImplementation(async () =>
       User.with({

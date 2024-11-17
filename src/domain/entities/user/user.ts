@@ -1,5 +1,5 @@
-import { v4 as uuid } from "uuid";
-import { compare, hash } from "bcryptjs";
+import { PasswordService } from "../../../shared/services/password-service";
+import { UuidService } from "../../../shared/services/uuid-service";
 
 interface UserProps {
   id: string;
@@ -14,10 +14,10 @@ export class User {
   public static async create({ email, password, name }: Omit<UserProps, "id">) {
     this.validate(email, password, name);
 
-    const hashedPassword = await this.hashPassword(password);
+    const hashedPassword = await PasswordService.hashPassword(password);
 
     return new User({
-      id: uuid(),
+      id: UuidService.generate(),
       email,
       password: hashedPassword,
       name,
@@ -25,42 +25,18 @@ export class User {
   }
 
   public static with({ id, email, name, password }: UserProps) {
-    this.validate(email, password, name);
-
     return new User({ id, email, name, password });
-  }
-
-  public static withoutPassword({ id, email, name, password }: UserProps) {
-    const user = this.with({
-      id,
-      email,
-      name,
-
-      password,
-    });
-
-    const { password: userPassword, ...userWithoutPassword } = user.props;
-
-    return userWithoutPassword;
   }
 
   public static async update(user: User, updates: Partial<UserProps>) {
     if (updates.password) {
-      updates.password = await this.hashPassword(updates.password);
+      updates.password = await PasswordService.hashPassword(updates.password);
     }
 
     return new User({
       ...user.props,
       ...updates,
     });
-  }
-
-  public async comparePassword(password: string) {
-    return await compare(password, this.props.password);
-  }
-
-  public static async hashPassword(password: string) {
-    return await hash(password, 10);
   }
 
   private static isValidEmail(email: string) {
