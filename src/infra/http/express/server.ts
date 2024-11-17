@@ -1,6 +1,7 @@
 import express, { Application } from "express";
 import { json } from "body-parser";
 import userRoutes from "./routes/user-routes";
+import expenseRoutes from './routes/expense-routes';
 
 export class Server {
   private app: Application;
@@ -20,6 +21,7 @@ export class Server {
 
   private setupRoutes() {
     this.app.use("/api/users", userRoutes);
+    this.app.use("/api/expenses", expenseRoutes);
   }
 
   public start() {

@@ -13,9 +13,22 @@ datasource db {
   url      = "file:./dev.db"
 }
 
-model User {
-  id       String @id @default(uuid())
+model Users {
+  id       String  @id @default(uuid())
   name     String
-  email    String @unique
+  email    String  @unique
   password String
+  isAdmin  Boolean
+
+  expenses Expenses[]
+}
+
+model Expenses {
+  id          String   @id @default(uuid())
+  user_id     String
+  user        Users    @relation(fields: [user_id], references: [id])
+  date        DateTime
+  amount      Float
+  description String
+  category    String
 }

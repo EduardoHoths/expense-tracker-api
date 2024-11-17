@@ -1,0 +1,11 @@
+POST http://localhost:3000/api/expenses/create
+Content-Type: application/json
+
+{
+  "description": "Expense 1",
+  "amount": 100,
+  "date": "2018-05-01",
+  "category": "Groceries",
+  "userId": "f63925ff-a2dd-4a77-a46a-71d9d089958a" 
+}
+// o user id terá que ser enviado pelo token

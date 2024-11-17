@@ -6,19 +6,28 @@ interface UserProps {
   name: string;
   email: string;
   password: string;
+  isAdmin: boolean;
 }
 
 export class User {
   constructor(private props: UserProps) {}
 
-  public static async create(email: string, password: string, name: string) {
+  public static async create({
+    email,
+    password,
+    name,
+    isAdmin,
+  }: Omit<UserProps, "id">) {
     const hashedPassword = await this.hashPassword(password);
+
+    this.validate(email, password, name);
 
     return new User({
       id: uuid(),
       email,
       password: hashedPassword,
       name,
+      isAdmin,
     });
   }
 
@@ -26,20 +35,58 @@ export class User {
     return new User(props);
   }
 
-  public static withoutPassword(props: UserProps) {
-    const user = this.with(props);
+  public static withoutPassword({
+    id,
+    email,
+    name,
+    password,
+    isAdmin,
+  }: UserProps) {
+    const user = this.with({
+      id,
+      email,
+      name,
+      isAdmin,
+      password,
+    });
 
-    const { password, ...userWithoutPassword } = user.props;
+    const { password: userPassword, ...userWithoutPassword } = user.props;
 
     return userWithoutPassword;
   }
 
-  private static async hashPassword(password: string) {
-    return await hash(password, 8);
-  }
-
   public async comparePassword(password: string) {
     return await compare(password, this.props.password);
+  }
+
+  private static async hashPassword(password: string) {
+    return await hash(password, 10);
+  }
+
+  private static isValidEmail(email: string) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
+
+  private static isValidPassword(password: string) {
+    return password.length >= 6;
+  }
+  private static isValidName(name: string) {
+    return name.length <= 100;
+  }
+
+  private static validate(email: string, password: string, name: string) {
+    if (!this.isValidEmail(email)) {
+      throw new Error("Invalid email");
+    }
+
+    if (!this.isValidPassword(password)) {
+      throw new Error("Password must be at least 6 characters");
+    }
+
+    if (!this.isValidName(name)) {
+      throw new Error("Name must be less than 100 characters");
+    }
   }
 
   get id() {
@@ -56,5 +103,9 @@ export class User {
 
   get password() {
     return this.props.password;
+  }
+
+  get isAdmin() {
+    return this.props.isAdmin;
   }
 }

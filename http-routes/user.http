@@ -1,8 +1,8 @@
-POST http://localhost:3000/api/users
+POST http://localhost:3000/api/users/create
 Content-Type: application/json
 
 {
   "name": "John Doe",
-  "email": "john.doeeee@example.com",
+  "email": "johnn.doeee@example.com",
   "password": "password123"
 }
