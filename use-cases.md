@@ -11,9 +11,9 @@
 
 **Description**: User can login to the application using email and password.
 
-- [ ] Valid email and password for login
-- [ ] Return authentication error for invalid credentials
-- [ ] Generate JWT token after login with configurable expiration
+- [x] Valid email and password for login
+- [x] Return authentication error for invalid credentials
+- [x] Generate JWT token after login with configurable expiration
   
 ## Use Case 3: Add New Expense (Create Expense)
 
@@ -22,7 +22,7 @@
 - [x] The expense amount must be positive
 - [x] The expense date cannot be in the future
 - [x] The category must be one of the predefined options 
-- [ ] User must be authenticated to create expense
+- [x] User must be authenticated to create expense
 
 ## Use Case 4: List and Filter Expenses
 

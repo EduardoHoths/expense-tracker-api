@@ -1,7 +1,9 @@
+import "dotenv/config";
 import express, { Application } from "express";
 import { json } from "body-parser";
 import userRoutes from "./routes/user-routes";
-import expenseRoutes from './routes/expense-routes';
+import expenseRoutes from "./routes/expense-routes";
+import authRoutes from "./routes/auth-routes";
 
 export class Server {
   private app: Application;
@@ -22,6 +24,7 @@ export class Server {
   private setupRoutes() {
     this.app.use("/api/users", userRoutes);
     this.app.use("/api/expenses", expenseRoutes);
+    this.app.use("/api/auth", authRoutes);
   }
 
   public start() {

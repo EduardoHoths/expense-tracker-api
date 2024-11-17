@@ -11,7 +11,7 @@ export const createUserController = async (req: Request, res: Response) => {
   try {
     const user = await createUser.execute(req.body);
 
-    const responseBody = UserPresenter.present(user);
+    const responseBody = UserPresenter.toJSON(user);
 
     res
       .status(201)

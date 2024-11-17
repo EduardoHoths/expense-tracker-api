@@ -1,6 +1,7 @@
 import { Expense } from "../../../../domain/entities/expense/expense";
 import { ExpenseCategory } from "../../../../domain/entities/expense/expense-category";
 import { ExpenseRepository } from "../../../../domain/interfaces/expense-repository";
+import { TokenGenerator } from "../../../../domain/interfaces/token-generator";
 import { UserRepository } from "../../../../domain/interfaces/user-repository";
 import { UseCase } from "../../../usecase";
 
@@ -9,7 +10,7 @@ interface CreateExpenseInputDto {
   amount: number;
   date: Date;
   category: ExpenseCategory;
-  userId: string;
+  accessToken: string;
 }
 
 type CreateExpenseOutputDto = Expense;
@@ -17,16 +18,22 @@ type CreateExpenseOutputDto = Expense;
 export class CreateExpenseUseCase
   implements UseCase<CreateExpenseInputDto, CreateExpenseOutputDto>
 {
-  constructor(
+  private constructor(
     private expenseRepository: ExpenseRepository,
-    private userRepository: UserRepository
+    private userRepository: UserRepository,
+    private tokenGenerator: TokenGenerator
   ) {}
 
   public static create(
     expenseRepository: ExpenseRepository,
-    userRepository: UserRepository
+    userRepository: UserRepository,
+    tokenGenerator: TokenGenerator
   ) {
-    return new CreateExpenseUseCase(expenseRepository, userRepository);
+    return new CreateExpenseUseCase(
+      expenseRepository,
+      userRepository,
+      tokenGenerator
+    );
   }
 
   async execute({
@@ -34,8 +41,12 @@ export class CreateExpenseUseCase
     amount,
     date,
     category,
-    userId,
+    accessToken,
   }: CreateExpenseInputDto): Promise<Expense> {
+    const { userId } = this.tokenGenerator.verify(accessToken) as {
+      userId: string;
+    };
+
     const user = await this.userRepository.findByUserId(userId);
 
     if (!user) {

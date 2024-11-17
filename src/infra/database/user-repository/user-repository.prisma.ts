@@ -18,7 +18,7 @@ export class UserRepositoryPrisma implements UserRepository {
       isAdmin: user.isAdmin,
     };
 
-    const userSaved = await this.prismaClient.users.create({
+    const userSaved = await this.prismaClient.user.create({
       data,
     });
 
@@ -32,7 +32,7 @@ export class UserRepositoryPrisma implements UserRepository {
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    const user = await this.prismaClient.users.findFirst({
+    const user = await this.prismaClient.user.findFirst({
       where: {
         email,
       },
@@ -52,7 +52,7 @@ export class UserRepositoryPrisma implements UserRepository {
   }
 
   async findAllUsers(): Promise<User[] | []> {
-    const users = await this.prismaClient.users.findMany();
+    const users = await this.prismaClient.user.findMany();
 
     if (!users) {
       return [];
@@ -70,7 +70,7 @@ export class UserRepositoryPrisma implements UserRepository {
   }
 
   async findByUserId(userId: string): Promise<User | null> {
-    const user = await this.prismaClient.users.findFirst({
+    const user = await this.prismaClient.user.findFirst({
       where: {
         id: userId,
       },

@@ -16,6 +16,29 @@ describe("User Entity", () => {
     expect(user.password).not.toBe(password); // password should be hashed
   });
 
+  it("should update a user successfully", async () => {
+    const updates = {
+      email: "jane.doe@gmail.com",
+      password: "new-password",
+      name: "Jane Doe",
+    };
+
+    const user = User.with({
+      id: "1",
+      email: "joe.doe@gmail.com",
+      isAdmin: false,
+      name: "Joe Doe",
+      password: await User.hashPassword("123456"),
+    });
+
+    const updatedUser = await User.update(user, updates);
+
+    expect(updatedUser).toBeInstanceOf(User);
+    expect(updatedUser.email).toBe(updates.email);
+    expect(updatedUser.password).toBe(updates.password);
+    expect(updatedUser.name).toBe(updates.name);
+  });
+
   it("should create a user as an admin", async () => {
     const user = await User.create({
       email,

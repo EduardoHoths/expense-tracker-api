@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { execSync } from "child_process";
-import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
+import { beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { UserRepositoryPrisma } from "./user-repository.prisma";
 import { User } from "../../../domain/entities/user/user";
 
@@ -9,13 +9,13 @@ describe("UserRepositoryPrisma", () => {
   let userRepository: UserRepositoryPrisma;
 
   beforeAll(() => {
-    process.env.DATABASE_URL = "file:./test.db";
+    process.env.DATABASE_URL = "file:./test-user.db";
     execSync("npx prisma migrate");
     prismaClient = new PrismaClient();
   });
 
   beforeEach(async () => {
-    await prismaClient.users.deleteMany();
+    await prismaClient.user.deleteMany(); 
     userRepository = UserRepositoryPrisma.create(prismaClient);
   });
 

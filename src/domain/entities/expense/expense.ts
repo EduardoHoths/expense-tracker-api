@@ -11,7 +11,7 @@ interface ExpenseProps {
 }
 
 export class Expense {
-  constructor(private props: ExpenseProps) {}
+  private constructor(private props: ExpenseProps) {}
 
   public static create({
     amount,
@@ -42,7 +42,7 @@ export class Expense {
     category: ExpenseCategory
   ) {
     if (!this.isValidAmount(amount)) {
-      throw new Error("Invalid amount");
+      throw new Error("Amount must be positive");
     }
 
     if (!this.isValidDate(date)) {

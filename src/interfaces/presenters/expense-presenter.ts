@@ -1,7 +1,7 @@
 import { Expense } from "../../domain/entities/expense/expense";
 
 export class ExpensePresenter {
-  public static present(expense: Expense) {
+  public static toJSON(expense: Expense) {
     return {
       id: expense.id,
       description: expense.description,

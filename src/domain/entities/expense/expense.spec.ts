@@ -46,7 +46,7 @@ describe("Expense", () => {
         date,
         userId,
       })
-    ).toThrow("Invalid amount");
+    ).toThrow("Amount must be positive");
   });
 
   it("should throw an error if date is invalid", () => {

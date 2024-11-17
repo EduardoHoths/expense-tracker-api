@@ -29,7 +29,7 @@ export class ListExpensesUseCase
     endDate,
     startDate,
   }: ListExpenseInputDto): Promise<ListExpenseOutputDto> {
-    const expenses = await this.expenseRepository.findByUserId(userId);
+    const expenses = await this.expenseRepository.findExpensesByUserId(userId);
 
     const now = new Date();
 

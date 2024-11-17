@@ -12,9 +12,10 @@ describe("CreateUserUseCase", () => {
       findByEmail: vi.fn(),
       save: vi.fn(),
       findAllUsers: vi.fn(),
+      findByUserId: vi.fn(),
     };
 
-    createUserUseCase = new CreateUserUseCase(userRepository);
+    createUserUseCase = CreateUserUseCase.create(userRepository);
   });
 
   it("should create a new user successfully", async () => {

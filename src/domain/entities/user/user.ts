@@ -10,7 +10,7 @@ interface UserProps {
 }
 
 export class User {
-  constructor(private props: UserProps) {}
+  private constructor(private props: UserProps) {}
 
   public static async create({
     email,
@@ -31,8 +31,10 @@ export class User {
     });
   }
 
-  public static with(props: UserProps) {
-    return new User(props);
+  public static with({ id, email, name, password, isAdmin }: UserProps){
+    this.validate(email, password, name);
+
+    return new User({ id, email, name, password, isAdmin });
   }
 
   public static withoutPassword({
@@ -55,11 +57,22 @@ export class User {
     return userWithoutPassword;
   }
 
+  public static async update(user: User, updates: Partial<UserProps>) {
+    if (updates.password) {
+      updates.password = await this.hashPassword(updates.password);
+    }
+
+    return new User({
+      ...user.props,
+      ...updates,
+    });
+  }
+
   public async comparePassword(password: string) {
     return await compare(password, this.props.password);
   }
 
-  private static async hashPassword(password: string) {
+  public static async hashPassword(password: string) {
     return await hash(password, 10);
   }
 
@@ -71,6 +84,7 @@ export class User {
   private static isValidPassword(password: string) {
     return password.length >= 6;
   }
+
   private static isValidName(name: string) {
     return name.length <= 100;
   }
@@ -109,3 +123,4 @@ export class User {
     return this.props.isAdmin;
   }
 }
+

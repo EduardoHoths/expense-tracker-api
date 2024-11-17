@@ -1,11 +1,10 @@
 POST http://localhost:3000/api/expenses/create
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjMDM0NjNkMy0xZGQzLTQzMmUtYThjYi0wZWJkYzBlYzMxMjEiLCJlbWFpbCI6IkpvaG4uRG9lQGV4YW1wbGUuY29tIiwiaWF0IjoxNzMxODY5MzQ0LCJleHAiOjE3MzE4NzI5NDR9.lKqxJvzZJwknl5Unjk8CC9HVhYXVjbOUdfRHJdNIDN
 
 {
   "description": "Expense 1",
   "amount": 100,
   "date": "2018-05-01",
-  "category": "Groceries",
-  "userId": "f63925ff-a2dd-4a77-a46a-71d9d089958a" 
+  "category": "Groceries"
 }
-// o user id terá que ser enviado pelo token

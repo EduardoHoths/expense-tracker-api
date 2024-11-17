@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
-import { ExpenseRepository } from "../../domain/interfaces/expense-repository";
-import { Expense } from "../../domain/entities/expense/expense";
-import { ExpenseCategory } from "../../domain/entities/expense/expense-category";
+import { ExpenseRepository } from "../../../domain/interfaces/expense-repository";
+import { Expense } from "../../../domain/entities/expense/expense";
+import { ExpenseCategory } from "../../../domain/entities/expense/expense-category";
 
 export class ExpenseRepositoryPrisma implements ExpenseRepository {
   private constructor(private readonly prismaClient: PrismaClient) {}
@@ -11,7 +11,7 @@ export class ExpenseRepositoryPrisma implements ExpenseRepository {
   }
 
   async save(expense: Expense): Promise<Expense> {
-    const expenseSaved = await this.prismaClient.expenses.create({
+    const expenseSaved = await this.prismaClient.expense.create({
       data: {
         id: expense.id,
         user_id: expense.userId,
@@ -32,8 +32,8 @@ export class ExpenseRepositoryPrisma implements ExpenseRepository {
     });
   }
 
-  async findUserById(userId: string): Promise<Expense[] | []> {
-    const user = await this.prismaClient.users.findFirst({
+  async findExpensesByUserId(userId: string): Promise<Expense[] | []> {
+    const user = await this.prismaClient.user.findFirst({
       where: {
         id: userId,
       },
@@ -43,7 +43,7 @@ export class ExpenseRepositoryPrisma implements ExpenseRepository {
       throw new Error("User not found");
     }
 
-    const expenses = await this.prismaClient.expenses.findMany({
+    const expenses = await this.prismaClient.expense.findMany({
       where: {
         user_id: userId,
       },
@@ -61,7 +61,7 @@ export class ExpenseRepositoryPrisma implements ExpenseRepository {
         amount: expense.amount,
         date: expense.date,
         category: expense.category as ExpenseCategory,
-      });
+      })
     });
   }
 }
