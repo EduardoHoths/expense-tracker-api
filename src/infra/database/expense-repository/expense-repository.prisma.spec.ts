@@ -15,7 +15,6 @@ describe("ExpenseRepositoryPrisma", () => {
     name: "John Doe",
     email: "john.doe@gmail.com",
     password: "password",
-    isAdmin: false,
   });
 
   const TEST_EXPENSE = Expense.create({
@@ -42,7 +41,6 @@ describe("ExpenseRepositoryPrisma", () => {
         name: TEST_USER.name,
         email: TEST_USER.email,
         password: TEST_USER.password,
-        isAdmin: TEST_USER.isAdmin,
       },
     });
 

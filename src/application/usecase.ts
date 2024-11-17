@@ -1,3 +1,3 @@
-export interface UseCase<InputDto, OutputDto> {
-  execute(data: InputDto): Promise<OutputDto>;
+export interface UseCase<InputDTO, OutputDTO> {
+  execute(data: InputDTO): Promise<OutputDTO>;
 }

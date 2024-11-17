@@ -3,7 +3,7 @@ import { UserRepository } from "../../../domain/interfaces/user-repository";
 import { TokenGenerator } from "../../../domain/interfaces/token-generator";
 import { AuthenticateUserUseCase } from "./authenticate-user";
 import { User } from "../../../domain/entities/user/user";
- 
+
 describe("AuthenticateUserUseCase", () => {
   let userRepository: UserRepository;
   let tokenGenerator: TokenGenerator;
@@ -33,7 +33,7 @@ describe("AuthenticateUserUseCase", () => {
       email: "john.doe@gmail.com",
       password: "123456",
     };
- 
+
     const hashedPassword = await User.hashPassword(input.password);
 
     vi.mocked(userRepository.findByEmail).mockImplementation(async () =>
@@ -42,7 +42,6 @@ describe("AuthenticateUserUseCase", () => {
         name: "John Doe",
         email: "john.doe@gmail.com",
         password: hashedPassword,
-        isAdmin: false,
       })
     );
 
@@ -82,7 +81,6 @@ describe("AuthenticateUserUseCase", () => {
         name: "John Doe",
         email: "john.doe@gmail.com",
         password: hashedPassword,
-        isAdmin: false,
       })
     );
 

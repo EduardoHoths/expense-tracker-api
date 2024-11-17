@@ -5,10 +5,9 @@ describe("User Entity", () => {
   const email = "test@gmail.com";
   const password = "123456";
   const name = "test";
-  const isAdmin = false;
 
   it("should create a user with a hashed password", async () => {
-    const user = await User.create({ email, password, name, isAdmin });
+    const user = await User.create({ email, password, name });
 
     expect(user).toBeInstanceOf(User);
     expect(user.email).toBe(email);
@@ -26,7 +25,7 @@ describe("User Entity", () => {
     const user = User.with({
       id: "1",
       email: "joe.doe@gmail.com",
-      isAdmin: false,
+
       name: "Joe Doe",
       password: await User.hashPassword("123456"),
     });
@@ -44,13 +43,11 @@ describe("User Entity", () => {
       email,
       password,
       name,
-      isAdmin: true,
     });
 
     expect(user).toBeInstanceOf(User);
     expect(user.email).toBe(email);
     expect(user.name).toBe(name);
-    expect(user.isAdmin).toBe(true);
   });
 
   it("should compare a password with a hashed password", async () => {
@@ -58,7 +55,6 @@ describe("User Entity", () => {
       email,
       password,
       name,
-      isAdmin,
     });
 
     const isMatch = await user.comparePassword(password);
@@ -74,7 +70,6 @@ describe("User Entity", () => {
       email,
       password,
       name,
-      isAdmin,
     });
 
     expect(user).not.toHaveProperty("password");
@@ -84,7 +79,7 @@ describe("User Entity", () => {
     const invalidEmail = "invalid-email";
 
     await expect(
-      User.create({ email: invalidEmail, password, name, isAdmin })
+      User.create({ email: invalidEmail, password, name })
     ).rejects.toThrow("Invalid email");
   });
 
@@ -92,7 +87,7 @@ describe("User Entity", () => {
     const invalidPassword = "12345";
 
     await expect(
-      User.create({ email, password: invalidPassword, name, isAdmin })
+      User.create({ email, password: invalidPassword, name })
     ).rejects.toThrow("Password must be at least 6 characters");
   });
 
@@ -100,7 +95,7 @@ describe("User Entity", () => {
     const invalidName = "a".repeat(101);
 
     await expect(
-      User.create({ email, password, name: invalidName, isAdmin })
+      User.create({ email, password, name: invalidName })
     ).rejects.toThrow("Name must be less than 100 characters");
   });
 });

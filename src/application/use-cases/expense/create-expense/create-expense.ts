@@ -5,7 +5,7 @@ import { TokenGenerator } from "../../../../domain/interfaces/token-generator";
 import { UserRepository } from "../../../../domain/interfaces/user-repository";
 import { UseCase } from "../../../usecase";
 
-interface CreateExpenseInputDto {
+interface CreateExpenseInputDTO {
   description: string;
   amount: number;
   date: Date;
@@ -13,10 +13,10 @@ interface CreateExpenseInputDto {
   accessToken: string;
 }
 
-type CreateExpenseOutputDto = Expense;
+type CreateExpenseOutputDTO = Expense;
 
 export class CreateExpenseUseCase
-  implements UseCase<CreateExpenseInputDto, CreateExpenseOutputDto>
+  implements UseCase<CreateExpenseInputDTO, CreateExpenseOutputDTO>
 {
   private constructor(
     private expenseRepository: ExpenseRepository,
@@ -42,7 +42,7 @@ export class CreateExpenseUseCase
     date,
     category,
     accessToken,
-  }: CreateExpenseInputDto): Promise<Expense> {
+  }: CreateExpenseInputDTO): Promise<Expense> {
     const { userId } = this.tokenGenerator.verify(accessToken) as {
       userId: string;
     };

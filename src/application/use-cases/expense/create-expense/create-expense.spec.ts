@@ -32,7 +32,6 @@ describe("CreateExpenseUseCase", () => {
     name: "John Doe",
     email: "john.doe@gmail.com",
     password: "password",
-    isAdmin: false,
   });
 
   const TEST_EXPENSE_DATA = {
@@ -63,7 +62,9 @@ describe("CreateExpenseUseCase", () => {
     const expense = await createExpenseUseCase.execute(TEST_EXPENSE_DATA);
 
     expect(expense).toBeInstanceOf(Expense);
-    expect(mockTokenGenerator.verify).toHaveBeenCalledWith(TEST_EXPENSE_DATA.accessToken);
+    expect(mockTokenGenerator.verify).toHaveBeenCalledWith(
+      TEST_EXPENSE_DATA.accessToken
+    );
     expect(mockUserRepository.findByUserId).toHaveBeenCalledWith("1");
     expect(mockExpenseRepository.save).toHaveBeenCalledTimes(1);
 
@@ -106,7 +107,7 @@ describe("CreateExpenseUseCase", () => {
 
     await expect(() =>
       createExpenseUseCase.execute(invalidData)
-    ).rejects.toThrow("Amount must be positive"); 
+    ).rejects.toThrow("Amount must be positive");
   });
 
   it("should validate expense date", async () => {
@@ -120,6 +121,6 @@ describe("CreateExpenseUseCase", () => {
 
     await expect(() =>
       createExpenseUseCase.execute(invalidData)
-    ).rejects.toThrow("Invalid date"); 
+    ).rejects.toThrow("Invalid date");
   });
 });

@@ -9,17 +9,17 @@ export enum Filter {
   CUSTOM = "custom",
 }
 
-interface ListExpenseInputDto {
+interface ListExpenseInputDTO {
   userId: string;
   filter?: Filter;
   startDate?: Date;
   endDate?: Date;
 }
 
-type ListExpenseOutputDto = Expense[] | [];
+type ListExpenseOutputDTO = Expense[] | [];
 
 export class ListExpensesUseCase
-  implements UseCase<ListExpenseInputDto, ListExpenseOutputDto>
+  implements UseCase<ListExpenseInputDTO, ListExpenseOutputDTO>
 {
   constructor(private expenseRepository: ExpenseRepository) {}
 
@@ -28,7 +28,7 @@ export class ListExpensesUseCase
     filter,
     endDate,
     startDate,
-  }: ListExpenseInputDto): Promise<ListExpenseOutputDto> {
+  }: ListExpenseInputDTO): Promise<ListExpenseOutputDTO> {
     const expenses = await this.expenseRepository.findExpensesByUserId(userId);
 
     const now = new Date();

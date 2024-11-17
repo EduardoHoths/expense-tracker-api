@@ -15,7 +15,7 @@ export class UserRepositoryPrisma implements UserRepository {
       name: user.name,
       email: user.email,
       password: user.password,
-      isAdmin: user.isAdmin,
+      
     };
 
     const userSaved = await this.prismaClient.user.create({
@@ -27,7 +27,7 @@ export class UserRepositoryPrisma implements UserRepository {
       name: userSaved.name,
       email: userSaved.email,
       password: userSaved.password,
-      isAdmin: userSaved.isAdmin,
+      
     });
   }
 
@@ -47,7 +47,7 @@ export class UserRepositoryPrisma implements UserRepository {
       name: user.name,
       email: user.email,
       password: user.password,
-      isAdmin: user.isAdmin,
+      
     });
   }
 
@@ -64,7 +64,7 @@ export class UserRepositoryPrisma implements UserRepository {
         name: user.name,
         email: user.email,
         password: user.password,
-        isAdmin: user.isAdmin,
+        
       });
     });
   }
@@ -85,7 +85,7 @@ export class UserRepositoryPrisma implements UserRepository {
       name: user.name,
       email: user.email,
       password: user.password,
-      isAdmin: user.isAdmin,
+      
     });
   }
 }

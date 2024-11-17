@@ -15,7 +15,7 @@ describe("UserRepositoryPrisma", () => {
   });
 
   beforeEach(async () => {
-    await prismaClient.user.deleteMany(); 
+    await prismaClient.user.deleteMany();
     userRepository = UserRepositoryPrisma.create(prismaClient);
   });
 
@@ -25,7 +25,6 @@ describe("UserRepositoryPrisma", () => {
         name: "John Doe",
         email: "john@example.com",
         password: "123456",
-        isAdmin: false,
       });
 
       const savedUser = await userRepository.save(user);
@@ -35,7 +34,6 @@ describe("UserRepositoryPrisma", () => {
       expect(savedUser.name).toBe("John Doe");
       expect(savedUser.email).toBe("john@example.com");
       expect(savedUser.password).toBe(user.password);
-      expect(savedUser.isAdmin).toBe(false);
     });
   });
 
@@ -51,7 +49,6 @@ describe("UserRepositoryPrisma", () => {
         name: "John Doe",
         email: "john@example.com",
         password: "123456",
-        isAdmin: false,
       });
       await userRepository.save(user);
 
@@ -74,13 +71,11 @@ describe("UserRepositoryPrisma", () => {
         name: "John Doe",
         email: "john@example.com",
         password: "123456",
-        isAdmin: false,
       });
       const user2 = await User.create({
         name: "Jane Doe",
         email: "jane@example.com",
         password: "123456",
-        isAdmin: true,
       });
 
       await userRepository.save(user1);
@@ -100,14 +95,12 @@ describe("UserRepositoryPrisma", () => {
         name: "John Doe",
         email: "john@example.com",
         password: "123456",
-        isAdmin: false,
       });
 
       const user2 = await User.create({
         name: "Another John",
         email: "john@example.com",
         password: "123456",
-        isAdmin: false,
       });
 
       await userRepository.save(user1);

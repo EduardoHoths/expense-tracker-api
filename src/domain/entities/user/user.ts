@@ -6,49 +6,36 @@ interface UserProps {
   name: string;
   email: string;
   password: string;
-  isAdmin: boolean;
 }
 
 export class User {
   private constructor(private props: UserProps) {}
 
-  public static async create({
-    email,
-    password,
-    name,
-    isAdmin,
-  }: Omit<UserProps, "id">) {
-    const hashedPassword = await this.hashPassword(password);
-
+  public static async create({ email, password, name }: Omit<UserProps, "id">) {
     this.validate(email, password, name);
+
+    const hashedPassword = await this.hashPassword(password);
 
     return new User({
       id: uuid(),
       email,
       password: hashedPassword,
       name,
-      isAdmin,
     });
   }
 
-  public static with({ id, email, name, password, isAdmin }: UserProps){
+  public static with({ id, email, name, password }: UserProps) {
     this.validate(email, password, name);
 
-    return new User({ id, email, name, password, isAdmin });
+    return new User({ id, email, name, password });
   }
 
-  public static withoutPassword({
-    id,
-    email,
-    name,
-    password,
-    isAdmin,
-  }: UserProps) {
+  public static withoutPassword({ id, email, name, password }: UserProps) {
     const user = this.with({
       id,
       email,
       name,
-      isAdmin,
+
       password,
     });
 
@@ -118,9 +105,4 @@ export class User {
   get password() {
     return this.props.password;
   }
-
-  get isAdmin() {
-    return this.props.isAdmin;
-  }
 }
-

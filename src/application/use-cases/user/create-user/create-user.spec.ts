@@ -15,7 +15,7 @@ describe("CreateUserUseCase", () => {
       findByUserId: vi.fn(),
     };
 
-    createUserUseCase = CreateUserUseCase.create(userRepository);
+    createUserUseCase = new CreateUserUseCase(userRepository);
   });
 
   it("should create a new user successfully", async () => {
@@ -52,7 +52,6 @@ describe("CreateUserUseCase", () => {
           name: "John Doe",
           email: "john@example.com",
           password: "hashedPassword",
-          isAdmin: false,
         });
       }
       return null;
@@ -80,7 +79,7 @@ describe("CreateUserUseCase", () => {
     expect(result).toBeInstanceOf(User);
     expect(result.email).toBe(input.email);
     expect(result.name).toBe(input.name);
-    expect(result.isAdmin).toBe(true);
+    
     expect(userRepository.findByEmail).toHaveBeenCalledWith(input.email);
   });
 
@@ -97,7 +96,6 @@ describe("CreateUserUseCase", () => {
         name: "Jane Doe",
         email: "jane@example.com",
         password: "hashedPassword",
-        isAdmin: false,
       }),
     ]);
 
@@ -108,7 +106,6 @@ describe("CreateUserUseCase", () => {
     expect(result).toBeInstanceOf(User);
     expect(result.email).toBe(input.email);
     expect(result.name).toBe(input.name);
-    expect(result.isAdmin).toBe(false);
     expect(userRepository.findByEmail).toHaveBeenCalledWith(input.email);
   });
 });
