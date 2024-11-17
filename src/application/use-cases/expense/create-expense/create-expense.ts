@@ -24,18 +24,6 @@ export class CreateExpenseUseCase
     private tokenGenerator: TokenGenerator
   ) {}
 
-  public static create(
-    expenseRepository: ExpenseRepository,
-    userRepository: UserRepository,
-    tokenGenerator: TokenGenerator
-  ) {
-    return new CreateExpenseUseCase(
-      expenseRepository,
-      userRepository,
-      tokenGenerator
-    );
-  }
-
   async execute({
     description,
     amount,

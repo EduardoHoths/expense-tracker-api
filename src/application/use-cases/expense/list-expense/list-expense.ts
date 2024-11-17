@@ -60,8 +60,13 @@ export class ListExpensesUseCase
         });
 
       case Filter.CUSTOM:
+        if (!startDate || !endDate) {
+          throw new Error(
+            "Start date and end date are required for custom filter"
+          );
+        }
         return expenses.filter(
-          (expense) => expense.date >= startDate! && expense.date <= endDate!
+          (expense) => expense.date >= startDate && expense.date <= endDate
         );
     }
   }
