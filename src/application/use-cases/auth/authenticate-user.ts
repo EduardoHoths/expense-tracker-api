@@ -1,5 +1,5 @@
 import { UserRepository } from "./../../../domain/interfaces/user-repository";
-import { TokenGenerator } from "../../../domain/interfaces/token-generator";
+import { TokenService } from "../../../domain/interfaces/token-generator";
 import { UseCase } from "../../usecase";
 import { PasswordService } from "../../../shared/services/password-service";
 
@@ -17,7 +17,7 @@ export class AuthenticateUserUseCase
 {
   constructor(
     private userRepository: UserRepository,
-    private tokenGenerator: TokenGenerator
+    private TokenService: TokenService
   ) {}
 
   async execute({
@@ -36,7 +36,7 @@ export class AuthenticateUserUseCase
       throw new Error("Invalid credentials");
     }
 
-    const token = this.tokenGenerator.generate({
+    const token = this.TokenService.generate({
       userId: user.id,
       email: user.email,
     });

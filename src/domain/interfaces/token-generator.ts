@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-export interface TokenGenerator {
+export interface TokenService {
   generate(payload: object): string;
   verify(token: string): jwt.JwtPayload | string;
 }

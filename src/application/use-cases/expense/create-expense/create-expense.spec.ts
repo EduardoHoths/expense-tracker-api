@@ -2,13 +2,13 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { CreateExpenseUseCase } from "./create-expense";
 import { User } from "../../../../domain/entities/user/user";
 import { ExpenseCategory } from "../../../../domain/entities/expense/expense-category";
-import { TokenGenerator } from "../../../../domain/interfaces/token-generator";
+import { TokenService } from "../../../../domain/interfaces/token-generator";
 import { UserRepository } from "../../../../domain/interfaces/user-repository";
 import { ExpenseRepository } from "../../../../domain/interfaces/expense-repository";
 import { Expense } from "../../../../domain/entities/expense/expense";
 
 describe("CreateExpenseUseCase", () => {
-  const mockTokenGenerator: TokenGenerator = {
+  const mockTokenService: TokenService = {
     verify: vi.fn(),
     generate: vi.fn(),
   };
@@ -48,12 +48,12 @@ describe("CreateExpenseUseCase", () => {
     createExpenseUseCase = CreateExpenseUseCase.create(
       mockExpenseRepository,
       mockUserRepository,
-      mockTokenGenerator
+      mockTokenService
     );
   });
 
   it("should create a new expense successfully", async () => {
-    vi.mocked(mockTokenGenerator.verify).mockReturnValue({ userId: "1" });
+    vi.mocked(mockTokenService.verify).mockReturnValue({ userId: "1" });
     vi.mocked(mockUserRepository.findByUserId).mockResolvedValue(TEST_USER);
     vi.mocked(mockExpenseRepository.save).mockImplementation(
       async (expense) => expense
@@ -62,7 +62,7 @@ describe("CreateExpenseUseCase", () => {
     const expense = await createExpenseUseCase.execute(TEST_EXPENSE_DATA);
 
     expect(expense).toBeInstanceOf(Expense);
-    expect(mockTokenGenerator.verify).toHaveBeenCalledWith(
+    expect(mockTokenService.verify).toHaveBeenCalledWith(
       TEST_EXPENSE_DATA.accessToken
     );
     expect(mockUserRepository.findByUserId).toHaveBeenCalledWith("1");
@@ -78,7 +78,7 @@ describe("CreateExpenseUseCase", () => {
   });
 
   it("should throw error when user is not found", async () => {
-    vi.mocked(mockTokenGenerator.verify).mockReturnValue({ userId: "1" });
+    vi.mocked(mockTokenService.verify).mockReturnValue({ userId: "1" });
     vi.mocked(mockUserRepository.findByUserId).mockResolvedValue(null);
 
     await expect(() =>
@@ -87,7 +87,7 @@ describe("CreateExpenseUseCase", () => {
   });
 
   it("should throw error when token is invalid", async () => {
-    vi.mocked(mockTokenGenerator.verify).mockImplementation(() => {
+    vi.mocked(mockTokenService.verify).mockImplementation(() => {
       throw new Error("Invalid token");
     });
 
@@ -97,7 +97,7 @@ describe("CreateExpenseUseCase", () => {
   });
 
   it("should validate expense amount", async () => {
-    vi.mocked(mockTokenGenerator.verify).mockReturnValue({ userId: "1" });
+    vi.mocked(mockTokenService.verify).mockReturnValue({ userId: "1" });
     vi.mocked(mockUserRepository.findByUserId).mockResolvedValue(TEST_USER);
 
     const invalidData = {
@@ -111,7 +111,7 @@ describe("CreateExpenseUseCase", () => {
   });
 
   it("should validate expense date", async () => {
-    vi.mocked(mockTokenGenerator.verify).mockReturnValue({ userId: "1" });
+    vi.mocked(mockTokenService.verify).mockReturnValue({ userId: "1" });
     vi.mocked(mockUserRepository.findByUserId).mockResolvedValue(TEST_USER);
 
     const invalidData = {

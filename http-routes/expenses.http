@@ -1,4 +1,4 @@
-POST http://localhost:3000/api/expenses/create
+POST http://localhost:3000/expenses/create
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjMDM0NjNkMy0xZGQzLTQzMmUtYThjYi0wZWJkYzBlYzMxMjEiLCJlbWFpbCI6IkpvaG4uRG9lQGV4YW1wbGUuY29tIiwiaWF0IjoxNzMxODY5MzQ0LCJleHAiOjE3MzE4NzI5NDR9.lKqxJvzZJwknl5Unjk8CC9HVhYXVjbOUdfRHJdNIDN
 

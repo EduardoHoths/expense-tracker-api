@@ -4,6 +4,7 @@ import { ExpenseCategory } from "../../../domain/entities/expense/expense-catego
 import { HttpRequest } from "../../../shared/http/http-request";
 import { HttpResponse } from "../../../shared/http/http-response";
 import { Validator } from "../../../shared/validation/validator";
+import { TokenService } from "../../../domain/interfaces/token-generator";
 
 interface CreateExpenseDTO {
   description: string;
@@ -15,7 +16,8 @@ interface CreateExpenseDTO {
 export class ExpenseController {
   constructor(
     private createExpenseUseCase: CreateExpenseUseCase,
-    private createExpenseValidator: Validator<CreateExpenseDTO>
+    private createExpenseValidator: Validator<CreateExpenseDTO>,
+    private tokenService: TokenService
   ) {}
 
   createExpense = async (req: HttpRequest): Promise<HttpResponse> => {
@@ -29,16 +31,19 @@ export class ExpenseController {
         };
       }
 
-      const { description, amount, date, category } = this.createExpenseValidator.validate(
-        req.body
-      );
+      const { userId } = this.tokenService.verify(accessToken) as {
+        userId: string;
+      };
+
+      const { description, amount, date, category } =
+        this.createExpenseValidator.validate(req.body);
 
       const Expense = await this.createExpenseUseCase.execute({
         description,
         amount,
         date: new Date(date),
         category,
-        accessToken: accessToken,
+        userId,
       });
 
       const responseBody = ExpensePresenter.toJSON(Expense);

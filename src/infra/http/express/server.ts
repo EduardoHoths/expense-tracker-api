@@ -1,6 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
 import { userRoutes } from "./routes/user-routes";
+import { expenseRoutes } from "./routes/expense-routes";
 
 export default class Server {
   public app: express.Application;
@@ -17,6 +18,7 @@ export default class Server {
 
   private configureRoutes() {
     this.app.use("/users", userRoutes);
+    this.app.use("/expenses", expenseRoutes);
   }
 
   public start() {

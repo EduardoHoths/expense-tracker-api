@@ -4,11 +4,7 @@ import { Expense } from "../../../domain/entities/expense/expense";
 import { ExpenseCategory } from "../../../domain/entities/expense/expense-category";
 
 export class ExpenseRepositoryPrisma implements ExpenseRepository {
-  private constructor(private readonly prismaClient: PrismaClient) {}
-
-  public static create(prismaClient: PrismaClient) {
-    return new ExpenseRepositoryPrisma(prismaClient);
-  }
+  constructor(private readonly prismaClient: PrismaClient) {}
 
   async save(expense: Expense): Promise<Expense> {
     const expenseSaved = await this.prismaClient.expense.create({
@@ -61,7 +57,7 @@ export class ExpenseRepositoryPrisma implements ExpenseRepository {
         amount: expense.amount,
         date: expense.date,
         category: expense.category as ExpenseCategory,
-      })
+      });
     });
   }
 }

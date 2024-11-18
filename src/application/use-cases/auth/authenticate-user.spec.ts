@@ -1,13 +1,13 @@
 import { PasswordService } from './../../../shared/services/password-service';
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { UserRepository } from "../../../domain/interfaces/user-repository";
-import { TokenGenerator } from "../../../domain/interfaces/token-generator";
+import { TokenService } from "../../../domain/interfaces/token-generator";
 import { AuthenticateUserUseCase } from "./authenticate-user";
 import { User } from "../../../domain/entities/user/user";
 
 describe("AuthenticateUserUseCase", () => {
   let userRepository: UserRepository;
-  let tokenGenerator: TokenGenerator;
+  let TokenService: TokenService;
   let autheticateUserUseCase: AuthenticateUserUseCase;
 
   beforeEach(() => {
@@ -18,14 +18,14 @@ describe("AuthenticateUserUseCase", () => {
       findByUserId: vi.fn(),
     };
 
-    tokenGenerator = {
+    TokenService = {
       generate: vi.fn(),
       verify: vi.fn(),
     };
 
     autheticateUserUseCase = new AuthenticateUserUseCase(
       userRepository,
-      tokenGenerator
+      TokenService
     );
   });
 
@@ -46,7 +46,7 @@ describe("AuthenticateUserUseCase", () => {
       })
     );
 
-    vi.mocked(tokenGenerator.generate).mockReturnValue("token");
+    vi.mocked(TokenService.generate).mockReturnValue("token");
 
     const output = await autheticateUserUseCase.execute(input);
 
