@@ -8,9 +8,10 @@ export class ZodValidator<T> implements Validator<T> {
     const result = this.schema.safeParse(data);
 
     if (!result.success) {
+      console.log(result);
       throw new Error(result.error.errors.map((err) => err.message).join(", "));
     }
-    
+
     return result.data;
   }
 }

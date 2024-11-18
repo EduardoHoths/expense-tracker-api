@@ -16,7 +16,7 @@ export class UserController {
     private createUserValidator: Validator<CreateUserDTO>
   ) {}
 
-  createUser = async (req: HttpRequest): Promise<HttpResponse> => {
+  public createUser = async (req: HttpRequest): Promise<HttpResponse> => {
     try {
       const { email, name, password } = this.createUserValidator.validate(
         req.body
@@ -38,12 +38,7 @@ export class UserController {
         },
       };
     } catch (error: any) {
-      return {
-        statusCode: 400,
-        body: {
-          message: error.message,
-        },
-      };
+      throw new Error(error.message);
     }
   };
 }

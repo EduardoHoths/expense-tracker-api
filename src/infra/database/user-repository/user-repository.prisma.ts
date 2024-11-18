@@ -3,11 +3,7 @@ import { User } from "../../../domain/entities/user/user";
 import { UserRepository } from "../../../domain/interfaces/user-repository";
 
 export class UserRepositoryPrisma implements UserRepository {
-  private constructor(private readonly prismaClient: PrismaClient) {}
-
-  public static create(prismaClient: PrismaClient) {
-    return new UserRepositoryPrisma(prismaClient);
-  }
+  constructor(private readonly prismaClient: PrismaClient) {}
 
   async save(user: User): Promise<User> {
     const data = {
@@ -15,7 +11,6 @@ export class UserRepositoryPrisma implements UserRepository {
       name: user.name,
       email: user.email,
       password: user.password,
-      
     };
 
     const userSaved = await this.prismaClient.user.create({
@@ -27,7 +22,6 @@ export class UserRepositoryPrisma implements UserRepository {
       name: userSaved.name,
       email: userSaved.email,
       password: userSaved.password,
-      
     });
   }
 
@@ -47,7 +41,6 @@ export class UserRepositoryPrisma implements UserRepository {
       name: user.name,
       email: user.email,
       password: user.password,
-      
     });
   }
 
@@ -64,7 +57,6 @@ export class UserRepositoryPrisma implements UserRepository {
         name: user.name,
         email: user.email,
         password: user.password,
-        
       });
     });
   }
@@ -79,13 +71,12 @@ export class UserRepositoryPrisma implements UserRepository {
     if (!user) {
       return null;
     }
-    
+
     return User.with({
       id: user.id,
       name: user.name,
       email: user.email,
       password: user.password,
-      
     });
   }
 }
