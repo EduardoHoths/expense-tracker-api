@@ -9,7 +9,7 @@ const createExpenseSchema = z.object({
     .number({ message: "Amount is required" })
     .positive({ message: "Amount must be a positive number" }),
 
-  date: z.string({ message: "Date is required" }).datetime(),
+  date: z.string({ message: "Date is required" }),
 
   category: z.nativeEnum(ExpenseCategory, {
     message: "Invalid category. Must be one of the predefined categories.",
