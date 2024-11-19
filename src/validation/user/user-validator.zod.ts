@@ -2,7 +2,11 @@ import { z } from "zod";
 import { ZodValidator } from "../../shared/validation/zod-validator";
 
 const createUserSchema = z.object({
-  email: z.string().email("Invalid email format").min(1, "Email is required"),
+  email: z
+    .string()
+    .email("Invalid email format")
+    .min(1, "Email is required")
+    .transform((email) => email.toLowerCase()),
 
   password: z.string().min(6, "Password must be at least 6 characters"),
 

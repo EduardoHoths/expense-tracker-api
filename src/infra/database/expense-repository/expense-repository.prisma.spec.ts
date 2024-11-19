@@ -44,7 +44,7 @@ describe("ExpenseRepositoryPrisma", () => {
       },
     });
 
-    expenseRepository = ExpenseRepositoryPrisma.create(prismaClient);
+    expenseRepository = new ExpenseRepositoryPrisma(prismaClient);
   });
 
   describe("save", () => {
@@ -76,8 +76,6 @@ describe("ExpenseRepositoryPrisma", () => {
       const expenses = await expenseRepository.findExpensesByUserId(
         TEST_USER.id
       );
-
-      console.log(expenses) 
 
       expect(expenses).toHaveLength(1);
       expect(expenses[0].userId).toBe(TEST_USER.id);

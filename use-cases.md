@@ -5,7 +5,6 @@
 **Description**: A user can register in the application by providing email, password and name.
 
 - [x] Email must be unique
-- [x] If is the first user, the user will be admin
 
 ## Use Case 2: User Authentication (Login)
 
@@ -54,6 +53,6 @@
 
 **Description**: The application must use JWT to authenticate users and protect endpoints.
 
-- [ ] JWT required for all expense endpoints
+- [ ] JWT required for all expense endpoints <!-- add a middleware to check for JWT -->
 - [ ] JWT must have configurable expiration
 - [ ] JWT token invalidation after logout or expiration
