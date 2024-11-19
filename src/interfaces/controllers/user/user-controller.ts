@@ -3,6 +3,7 @@ import { UserPresenter } from "../../presenters/user-presenter";
 import { Validator } from "../../../shared/validation/validator";
 import { HttpRequest } from "../../../shared/http/http-request";
 import { HttpResponse } from "../../../shared/http/http-response";
+import HttpStatusCode from "../../../infra/http/types/http-status-code";
 
 interface CreateUserDTO {
   name: string;
@@ -31,7 +32,7 @@ export class UserController {
       const responseBody = UserPresenter.toJSON(user);
 
       return {
-        statusCode: 201,
+        statusCode: HttpStatusCode.CREATED,
         body: {
           message: "User created successfully",
           user: responseBody,

@@ -5,6 +5,7 @@ import { HttpRequest } from "../../../shared/http/http-request";
 import { HttpResponse } from "../../../shared/http/http-response";
 import { Validator } from "../../../shared/validation/validator";
 import { TokenService } from "../../../domain/interfaces/token-generator";
+import HttpStatusCode from "../../../infra/http/types/http-status-code";
 
 interface CreateExpenseDTO {
   description: string;
@@ -26,7 +27,7 @@ export class ExpenseController {
 
       if (!accessToken) {
         return {
-          statusCode: 401,
+          statusCode: HttpStatusCode.UNAUTHORIZED,
           body: { message: "Unauthorized" },
         };
       }
@@ -49,7 +50,7 @@ export class ExpenseController {
       const responseBody = ExpensePresenter.toJSON(Expense);
 
       return {
-        statusCode: 201,
+        statusCode: HttpStatusCode.CREATED,
         body: {
           message: "Expense created successfully",
           expense: responseBody,
@@ -57,7 +58,7 @@ export class ExpenseController {
       };
     } catch (error: any) {
       return {
-        statusCode: 400,
+        statusCode: HttpStatusCode.BAD_REQUEST,
         body: { message: error.message },
       };
     }

@@ -2,6 +2,7 @@ import { HttpResponse } from "../../../shared/http/http-response";
 import { HttpRequest } from "../../../shared/http/http-request";
 import { Validator } from "../../../shared/validation/validator";
 import { AuthenticateUserUseCase } from "../../../application/use-cases/auth/authenticate-user";
+import HttpStatusCode from "../../../infra/http/types/http-status-code";
 
 interface AuthDTO {
   email: string;
@@ -24,14 +25,14 @@ export class AuthController {
       });
 
       return {
-        statusCode: 200,
+        statusCode: HttpStatusCode.OK,
         body: {
           accessToken: result.accessToken,
         },
       };
     } catch (error: any) {
       return {
-        statusCode: 400,
+        statusCode: HttpStatusCode.BAD_REQUEST,
         body: { message: error.message },
       };
     }
