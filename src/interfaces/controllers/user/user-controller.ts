@@ -39,7 +39,14 @@ export class UserController {
         },
       };
     } catch (error: any) {
-      throw new Error(error.message);
+      throw new Error(error.message)
+
+      return {
+        statusCode: HttpStatusCode.INTERNAL_SERVER_ERROR,
+        body: {
+          message: "Internal Server Error",
+        },
+      };
     }
   };
 }

@@ -23,8 +23,8 @@ describe("CreateExpenseUseCase", () => {
 
   const TEST_USER = User.with({
     id: "1",
-    name: "John Doe",
-    email: "john.doe@gmail.com",
+    name: "test",
+    email: "test@test.com",
     password: "password",
   });
 

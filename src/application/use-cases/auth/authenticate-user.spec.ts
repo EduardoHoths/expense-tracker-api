@@ -31,7 +31,7 @@ describe("AuthenticateUserUseCase", () => {
 
   it("should autheticate a user correctly", async () => {
     const input = {
-      email: "john.doe@gmail.com",
+      email: "test@test.com",
       password: "123456",
     };
 
@@ -40,8 +40,8 @@ describe("AuthenticateUserUseCase", () => {
     vi.mocked(userRepository.findByEmail).mockImplementation(async () =>
       User.with({
         id: "123",
-        name: "John Doe",
-        email: "john.doe@gmail.com",
+        name: "test",
+        email: "test@test.com",
         password: hashedPassword,
       })
     );
@@ -57,7 +57,7 @@ describe("AuthenticateUserUseCase", () => {
 
   it("should throw an error if user not found", async () => {
     const input = {
-      email: "john.doe@gmail.com",
+      email: "test@test.com",
       password: "123456",
     };
 
@@ -70,7 +70,7 @@ describe("AuthenticateUserUseCase", () => {
 
   it("should throw an error if password is invalid", async () => {
     const input = {
-      email: "john.doe@gmail.com",
+      email: "test@test.com",
       password: "invalid-password",
     };
 
@@ -79,8 +79,8 @@ describe("AuthenticateUserUseCase", () => {
     vi.mocked(userRepository.findByEmail).mockImplementation(async () =>
       User.with({
         id: "123",
-        name: "John Doe",
-        email: "john.doe@gmail.com",
+        name: "test",
+        email: "test@test.com",
         password: hashedPassword,
       })
     );

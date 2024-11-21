@@ -20,8 +20,8 @@ describe("CreateUserUseCase", () => {
 
   it("should create a new user successfully", async () => {
     const input = {
-      name: "John Doe",
-      email: "john@example.com",
+      name: "test",
+      email: "test@test.com",
       password: "password123",
     };
 
@@ -40,17 +40,17 @@ describe("CreateUserUseCase", () => {
 
   it("should throw an error if user already exists", async () => {
     const input = {
-      name: "John Doe",
-      email: "john@example.com",
+      name: "test",
+      email: "test@test.com",
       password: "password123",
     };
 
     vi.mocked(userRepository.findByEmail).mockImplementation(async (email) => {
-      if (email === "john@example.com") {
+      if (email === "test@test.com") {
         return User.with({
           id: "123",
-          name: "John Doe",
-          email: "john@example.com",
+          name: "test",
+          email: "test@test.com",
           password: "hashedPassword",
         });
       }
@@ -66,8 +66,8 @@ describe("CreateUserUseCase", () => {
 
   it("should create an admin user if there are no existing users", async () => {
     const input = {
-      name: "John Doe",
-      email: "john@example.com",
+      name: "test",
+      email: "test@test.com",
       password: "password123",
     };
 
@@ -79,14 +79,14 @@ describe("CreateUserUseCase", () => {
     expect(result).toBeInstanceOf(User);
     expect(result.email).toBe(input.email);
     expect(result.name).toBe(input.name);
-    
+
     expect(userRepository.findByEmail).toHaveBeenCalledWith(input.email);
   });
 
   it("should create a regular user if there are existing users", async () => {
     const input = {
-      name: "John Doe",
-      email: "john@example.com",
+      name: "test",
+      email: "test@test.com",
       password: "password123",
     };
 

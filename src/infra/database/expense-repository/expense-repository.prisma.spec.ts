@@ -1,19 +1,19 @@
 import { execSync } from "child_process";
-import { describe, it, expect, vi, beforeEach, beforeAll } from "vitest";
-import { PrismaClient } from "@prisma/client";
+import { describe, it, expect, beforeEach, beforeAll, afterAll } from "vitest";
 import { Expense } from "../../../domain/entities/expense/expense";
 import { ExpenseCategory } from "../../../domain/entities/expense/expense-category";
 import { ExpenseRepositoryPrisma } from "./expense-repository.prisma";
 import { User } from "../../../domain/entities/user/user";
+import { prisma } from "../../../package/prisma/prisma";
 
 describe("ExpenseRepositoryPrisma", () => {
-  let prismaClient: PrismaClient;
+  const prismaClient = prisma;
   let expenseRepository: ExpenseRepositoryPrisma;
 
   const TEST_USER = User.with({
     id: "1",
-    name: "John Doe",
-    email: "john.doe@gmail.com",
+    name: "test",
+    email: "test@test.com",
     password: "password",
   });
 
@@ -26,9 +26,7 @@ describe("ExpenseRepositoryPrisma", () => {
   });
 
   beforeAll(() => {
-    process.env.DATABASE_URL = "file:./test-expense.db";
-    execSync("npx prisma migrate");
-    prismaClient = new PrismaClient();
+    execSync("npx prisma db push");
   });
 
   beforeEach(async () => {
@@ -45,6 +43,10 @@ describe("ExpenseRepositoryPrisma", () => {
     });
 
     expenseRepository = new ExpenseRepositoryPrisma(prismaClient);
+  });
+
+  afterAll(async () => {
+    await prismaClient.user.deleteMany();
   });
 
   describe("save", () => {

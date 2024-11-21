@@ -1,29 +1,31 @@
-import { PrismaClient } from "@prisma/client";
 import { execSync } from "child_process";
-import { beforeAll, beforeEach, describe, expect, it } from "vitest";
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { UserRepositoryPrisma } from "./user-repository.prisma";
 import { User } from "../../../domain/entities/user/user";
+import { prisma } from "../../../package/prisma/prisma";
 
 describe("UserRepositoryPrisma", () => {
-  let prismaClient: PrismaClient;
+  const prismaClient = prisma;
   let userRepository: UserRepositoryPrisma;
 
   beforeAll(() => {
-    process.env.DATABASE_URL = "file:./test-user.db";
-    execSync("npx prisma migrate");
-    prismaClient = new PrismaClient();
+    execSync("npx prisma db push");
   });
 
   beforeEach(async () => {
     await prismaClient.user.deleteMany();
-    userRepository = new UserRepositoryPrisma(prismaClient);
+    userRepository = new UserRepositoryPrisma(prisma);
+  });
+
+  afterAll(async () => {
+    await prismaClient.user.deleteMany();
   });
 
   describe("save", () => {
     it("should save a new user", async () => {
       const user = await User.create({
-        name: "John Doe",
-        email: "john@example.com",
+        name: "test",
+        email: "test@test.com",
         password: "123456",
       });
 
@@ -31,8 +33,8 @@ describe("UserRepositoryPrisma", () => {
 
       expect(savedUser).toBeDefined();
       expect(savedUser.id).toBeDefined();
-      expect(savedUser.name).toBe("John Doe");
-      expect(savedUser.email).toBe("john@example.com");
+      expect(savedUser.name).toBe("test");
+      expect(savedUser.email).toBe("test@test.com");
       expect(savedUser.password).toBe(user.password);
     });
   });
@@ -46,16 +48,16 @@ describe("UserRepositoryPrisma", () => {
 
     it("should find a user by email", async () => {
       const user = await User.create({
-        name: "John Doe",
-        email: "john@example.com",
+        name: "test",
+        email: "test@test.com",
         password: "123456",
       });
       await userRepository.save(user);
 
-      const foundUser = await userRepository.findByEmail("john@example.com");
+      const foundUser = await userRepository.findByEmail("test@test.com");
 
       expect(foundUser).toBeDefined();
-      expect(foundUser?.email).toBe("john@example.com");
+      expect(foundUser?.email).toBe("test@test.com");
     });
   });
 
@@ -68,8 +70,8 @@ describe("UserRepositoryPrisma", () => {
 
     it("should return all users", async () => {
       const user1 = await User.create({
-        name: "John Doe",
-        email: "john@example.com",
+        name: "test",
+        email: "test@test.com",
         password: "123456",
       });
       const user2 = await User.create({
@@ -84,7 +86,7 @@ describe("UserRepositoryPrisma", () => {
       const users = await userRepository.findAllUsers();
 
       expect(users).toHaveLength(2);
-      expect(users.map((u) => u.email)).toContain("john@example.com");
+      expect(users.map((u) => u.email)).toContain("test@test.com");
       expect(users.map((u) => u.email)).toContain("jane@example.com");
     });
   });
@@ -92,14 +94,14 @@ describe("UserRepositoryPrisma", () => {
   describe("error handling", () => {
     it("should throw error when trying to save user with duplicate email", async () => {
       const user1 = await User.create({
-        name: "John Doe",
-        email: "john@example.com",
+        name: "test",
+        email: "test@test.com",
         password: "123456",
       });
 
       const user2 = await User.create({
-        name: "Another John",
-        email: "john@example.com",
+        name: "test",
+        email: "test@test.com",
         password: "123456",
       });
 

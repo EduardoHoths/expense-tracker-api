@@ -1,8 +1,10 @@
+import swaggerUi from "swagger-ui-express";
 import express from "express";
 import bodyParser from "body-parser";
-import { userRoutes } from "./routes/user-routes";
+import { userRoutes } from "./routes/user/user-routes";
 import { expenseRoutes } from "./routes/expense-routes";
 import { authRoutes } from "./routes/auth-routes";
+import { swaggerSpec } from "../config/swagger";
 
 export default class Server {
   public app: express.Application;
@@ -21,6 +23,7 @@ export default class Server {
     this.app.use("/users", userRoutes);
     this.app.use("/expenses", expenseRoutes);
     this.app.use("/auth", authRoutes);
+    this.app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
   }
 
   public start() {
