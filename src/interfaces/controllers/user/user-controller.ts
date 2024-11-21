@@ -4,6 +4,8 @@ import { Validator } from "../../../shared/validation/validator";
 import { HttpRequest } from "../../../shared/http/http-request";
 import { HttpResponse } from "../../../shared/http/http-response";
 import HttpStatusCode from "../../../infra/http/types/http-status-code";
+import { AppBaseError } from "../../../application/errors/app-error-base";
+import z from "zod";
 
 interface CreateUserDTO {
   name: string;
@@ -39,8 +41,26 @@ export class UserController {
         },
       };
     } catch (error: any) {
-      throw new Error(error.message)
+      if (error instanceof AppBaseError) {
+        return {
+          statusCode: error.statusCode,
+          body: {
+            message: error.message,
+          },
+        };
+      }
+      console.log(error.constructor.name)
+      
+      if (error instanceof z.ZodError){
+        return {
+          statusCode: HttpStatusCode.BAD_REQUEST,
+          body: {
+            message: error.errors.map((err) => err.message).join(", ")
+          },
+        };
+      }
 
+      console.log(error);
       return {
         statusCode: HttpStatusCode.INTERNAL_SERVER_ERROR,
         body: {

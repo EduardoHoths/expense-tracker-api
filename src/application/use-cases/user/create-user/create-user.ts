@@ -1,5 +1,6 @@
 import { User } from "../../../../domain/entities/user/user";
 import { UserRepository } from "../../../../domain/interfaces/user-repository";
+import { UserAlreadyExistsError } from "../../../errors/user/user-already-exists-error";
 import { UseCase } from "../../../usecase";
 
 interface CreateUserInputDTO {
@@ -23,7 +24,7 @@ export class CreateUserUseCase
     const existingUser = await this.userRepository.findByEmail(email);
 
     if (existingUser) {
-      throw new Error("User already exists");
+      throw new UserAlreadyExistsError();
     }
 
     const user = await User.create({ email, password, name });

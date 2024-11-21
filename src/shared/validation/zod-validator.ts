@@ -1,4 +1,4 @@
-import { ZodSchema } from "zod";
+import { ZodSchema, ZodError } from "zod";
 import { Validator } from "./validator";
 
 export class ZodValidator<T> implements Validator<T> {
@@ -8,7 +8,7 @@ export class ZodValidator<T> implements Validator<T> {
     const result = this.schema.safeParse(data);
 
     if (!result.success) {
-      throw new Error(result.error.errors.map((err) => err.message).join(", "));
+      throw new ZodError(result.error.errors);
     }
 
     return result.data;
