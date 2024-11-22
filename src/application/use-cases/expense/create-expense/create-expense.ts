@@ -2,6 +2,7 @@ import { Expense } from "../../../../domain/entities/expense/expense";
 import { ExpenseCategory } from "../../../../domain/entities/expense/expense-category";
 import { ExpenseRepository } from "../../../../domain/interfaces/expense-repository";
 import { UserRepository } from "../../../../domain/interfaces/user-repository";
+import { UserNotFoundError } from "../../../errors/expense/user-not-found";
 import { UseCase } from "../../../usecase";
 
 interface CreateExpenseInputDTO {
@@ -19,8 +20,7 @@ export class CreateExpenseUseCase
 {
   constructor(
     private expenseRepository: ExpenseRepository,
-    private userRepository: UserRepository,
-    
+    private userRepository: UserRepository
   ) {}
 
   async execute({
@@ -33,7 +33,7 @@ export class CreateExpenseUseCase
     const user = await this.userRepository.findByUserId(userId);
 
     if (!user) {
-      throw new Error("User not found");
+      throw new UserNotFoundError();
     }
 
     const expense = Expense.create({

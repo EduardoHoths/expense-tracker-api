@@ -6,6 +6,7 @@ import { HttpResponse } from "../../../shared/http/http-response";
 import { Validator } from "../../../shared/validation/validator";
 import { TokenService } from "../../../domain/interfaces/token-generator";
 import HttpStatusCode from "../../../infra/http/types/http-status-code";
+import { ControllerErrorHandler } from "../../errors/controller-error-handler";
 
 interface CreateExpenseDTO {
   description: string;
@@ -57,10 +58,7 @@ export class ExpenseController {
         },
       };
     } catch (error: any) {
-      return {
-        statusCode: HttpStatusCode.BAD_REQUEST,
-        body: { message: error.message },
-      };
+      return ControllerErrorHandler.handle(error);
     }
   };
 }

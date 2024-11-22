@@ -2,6 +2,7 @@ import { UserRepository } from "./../../../domain/interfaces/user-repository";
 import { TokenService } from "../../../domain/interfaces/token-generator";
 import { UseCase } from "../../usecase";
 import { PasswordService } from "../../../shared/services/password-service";
+import { InvalidCredentialsError } from "../../errors/auth/invalid-credentials-error";
 
 interface AuthenticateUserInputDTO {
   email: string;
@@ -27,13 +28,16 @@ export class AuthenticateUserUseCase
     const user = await this.userRepository.findByEmail(email);
 
     if (!user) {
-      throw new Error("Invalid credentials");
+      throw new InvalidCredentialsError();
     }
 
-    const isPasswordValid = await PasswordService.comparePassword(password, user.password);
+    const isPasswordValid = await PasswordService.comparePassword(
+      password,
+      user.password
+    );
 
     if (!isPasswordValid) {
-      throw new Error("Invalid credentials");
+      throw new InvalidCredentialsError();
     }
 
     const token = this.TokenService.generate({

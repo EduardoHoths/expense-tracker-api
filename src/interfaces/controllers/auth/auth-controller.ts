@@ -3,6 +3,7 @@ import { HttpRequest } from "../../../shared/http/http-request";
 import { Validator } from "../../../shared/validation/validator";
 import { AuthenticateUserUseCase } from "../../../application/use-cases/auth/authenticate-user";
 import HttpStatusCode from "../../../infra/http/types/http-status-code";
+import { ControllerErrorHandler } from "../../errors/controller-error-handler";
 
 interface AuthDTO {
   email: string;
@@ -31,10 +32,7 @@ export class AuthController {
         },
       };
     } catch (error: any) {
-      return {
-        statusCode: HttpStatusCode.BAD_REQUEST,
-        body: { message: error.message },
-      };
+      return ControllerErrorHandler.handle(error);
     }
   };
 }
