@@ -44,23 +44,6 @@ export class UserRepositoryPrisma implements UserRepository {
     });
   }
 
-  async findAllUsers(): Promise<User[] | []> {
-    const users = await this.prismaClient.user.findMany();
-
-    if (!users) {
-      return [];
-    }
-
-    return users.map((user) => {
-      return User.with({
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        password: user.password,
-      });
-    });
-  }
-
   async findByUserId(userId: string): Promise<User | null> {
     const user = await this.prismaClient.user.findFirst({
       where: {

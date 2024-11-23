@@ -1,7 +1,7 @@
 {
   "name": "expense-tracker-api",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
     "test": "vitest",
     "dev": "tsnd --transpile-only --ignore-watch node_modules src/main/index.ts"

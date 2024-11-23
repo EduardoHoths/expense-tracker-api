@@ -2,7 +2,6 @@ import { describe, it, expect, vi } from "vitest";
 import { Expense } from "./expense";
 import { ExpenseCategory } from "./expense-category";
 
-// Mock para a função uuid
 vi.mock("uuid", () => ({
   v4: () => "mocked-uuid",
 }));

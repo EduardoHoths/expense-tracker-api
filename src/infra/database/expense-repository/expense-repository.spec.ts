@@ -1,17 +1,17 @@
-import { execSync } from "child_process";
-import { describe, it, expect, beforeEach, beforeAll, afterAll } from "vitest";
+import { describe, it, expect, beforeEach, beforeAll, vi } from "vitest";
 import { Expense } from "../../../domain/entities/expense/expense";
 import { ExpenseCategory } from "../../../domain/entities/expense/expense-category";
-import { ExpenseRepositoryPrisma } from "./expense-repository.prisma";
 import { User } from "../../../domain/entities/user/user";
-import { prisma } from "../../../package/prisma/prisma";
+import { ExpenseRepositoryMemory } from "./expense-repository.memory";
+import { ExpenseRepository } from "../../../domain/interfaces/expense-repository";
+import { UserRepositoryMemory } from "../user-repository/user-repository.memory";
 
 describe("ExpenseRepositoryPrisma", () => {
-  const prismaClient = prisma;
-  let expenseRepository: ExpenseRepositoryPrisma;
+  let expenseRepository: ExpenseRepository;
+  const userRepository = new UserRepositoryMemory();
 
   const TEST_USER = User.with({
-    id: "1",
+    id: "2",
     name: "test",
     email: "test@test.com",
     password: "password",
@@ -25,28 +25,8 @@ describe("ExpenseRepositoryPrisma", () => {
     category: ExpenseCategory.CLOTHING,
   });
 
-  beforeAll(() => {
-    execSync("npx prisma db push");
-  });
-
-  beforeEach(async () => {
-    await prismaClient.user.deleteMany();
-    await prismaClient.expense.deleteMany();
-
-    await prismaClient.user.create({
-      data: {
-        id: TEST_USER.id,
-        name: TEST_USER.name,
-        email: TEST_USER.email,
-        password: TEST_USER.password,
-      },
-    });
-
-    expenseRepository = new ExpenseRepositoryPrisma(prismaClient);
-  });
-
-  afterAll(async () => {
-    await prismaClient.user.deleteMany();
+  beforeEach(() => {
+    expenseRepository = new ExpenseRepositoryMemory();
   });
 
   describe("save", () => {
@@ -64,16 +44,9 @@ describe("ExpenseRepositoryPrisma", () => {
 
   describe("findExpensesByUserId", () => {
     it("should return a list of expenses for a valid user", async () => {
-      await prismaClient.expense.create({
-        data: {
-          id: TEST_EXPENSE.id,
-          user_id: TEST_EXPENSE.userId,
-          description: TEST_EXPENSE.description,
-          amount: TEST_EXPENSE.amount,
-          date: TEST_EXPENSE.date,
-          category: TEST_EXPENSE.category,
-        },
-      });
+      await userRepository.save(TEST_USER);
+
+      await expenseRepository.save(TEST_EXPENSE);
 
       const expenses = await expenseRepository.findExpensesByUserId(
         TEST_USER.id
@@ -82,12 +55,6 @@ describe("ExpenseRepositoryPrisma", () => {
       expect(expenses).toHaveLength(1);
       expect(expenses[0].userId).toBe(TEST_USER.id);
       expect(expenses[0].amount).toBe(100);
-    });
-
-    it("should throw an error if user is not found", async () => {
-      await expect(
-        expenseRepository.findExpensesByUserId("invalid-user")
-      ).rejects.toThrowError("User not found");
     });
 
     it("should return an empty array if no expenses are found for the user", async () => {

@@ -2,12 +2,14 @@ import swaggerUi from "swagger-ui-express";
 import express from "express";
 import bodyParser from "body-parser";
 import { userRoutes } from "./routes/user/user-routes";
-import { expenseRoutes } from "./routes/expense-routes";
-import { authRoutes } from "./routes/auth-routes";
+import { expenseRoutes } from "./routes/expense/expense-routes";
+import { authRoutes } from "./routes/auth/auth-routes";
 import { swaggerSpec } from "../config/swagger";
+import http from "http";
 
 export default class Server {
   public app: express.Application;
+  private server: http.Server | null = null;
 
   constructor() {
     this.app = express();
@@ -28,8 +30,14 @@ export default class Server {
 
   public start() {
     const port = process.env.PORT || 3000;
-    this.app.listen(port, () => {
+    this.server = this.app.listen(port, () => {
       console.log(`Server running on port ${port}`);
     });
+  }
+
+  public stop() {
+    if (this.server) {
+      this.server.close();
+    }
   }
 }

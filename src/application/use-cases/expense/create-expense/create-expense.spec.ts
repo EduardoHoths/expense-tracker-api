@@ -9,7 +9,6 @@ import { Expense } from "../../../../domain/entities/expense/expense";
 describe("CreateExpenseUseCase", () => {
   const mockUserRepository: UserRepository = {
     findByUserId: vi.fn(),
-    findAllUsers: vi.fn(),
     findByEmail: vi.fn(),
     save: vi.fn(),
   };

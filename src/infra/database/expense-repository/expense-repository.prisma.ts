@@ -29,16 +29,6 @@ export class ExpenseRepositoryPrisma implements ExpenseRepository {
   }
 
   async findExpensesByUserId(userId: string): Promise<Expense[] | []> {
-    const user = await this.prismaClient.user.findFirst({
-      where: {
-        id: userId,
-      },
-    });
-
-    if (!user) {
-      throw new Error("User not found");
-    }
-
     const expenses = await this.prismaClient.expense.findMany({
       where: {
         user_id: userId,

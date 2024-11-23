@@ -1,5 +1,6 @@
 import jwt, { JsonWebTokenError } from "jsonwebtoken";
 import { TokenService } from "../../domain/interfaces/token-generator";
+import { TokenError } from "../../shared/errors/token-error";
 
 export class JwtService implements TokenService {
   generate(payload: object) {
@@ -12,7 +13,7 @@ export class JwtService implements TokenService {
     try {
       return jwt.verify(token, process.env.JWT_SECRET as string);
     } catch (error) {
-      throw new JsonWebTokenError("Invalid token");
+      throw new TokenError();
     }
   }
 }

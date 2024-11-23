@@ -11,7 +11,6 @@ describe("CreateUserUseCase", () => {
     userRepository = {
       findByEmail: vi.fn(),
       save: vi.fn(),
-      findAllUsers: vi.fn(),
       findByUserId: vi.fn(),
     };
 
@@ -25,7 +24,6 @@ describe("CreateUserUseCase", () => {
       password: "password123",
     };
 
-    vi.mocked(userRepository.findAllUsers).mockResolvedValue([]);
     vi.mocked(userRepository.findByEmail).mockResolvedValue(null);
     vi.mocked(userRepository.save).mockImplementation(async (user) => user);
 
@@ -71,7 +69,6 @@ describe("CreateUserUseCase", () => {
       password: "password123",
     };
 
-    vi.mocked(userRepository.findAllUsers).mockResolvedValue([]);
     vi.mocked(userRepository.findByEmail).mockResolvedValue(null);
     vi.mocked(userRepository.save).mockImplementation(async (user) => user);
 
@@ -80,32 +77,6 @@ describe("CreateUserUseCase", () => {
     expect(result.email).toBe(input.email);
     expect(result.name).toBe(input.name);
 
-    expect(userRepository.findByEmail).toHaveBeenCalledWith(input.email);
-  });
-
-  it("should create a regular user if there are existing users", async () => {
-    const input = {
-      name: "test",
-      email: "test@test.com",
-      password: "password123",
-    };
-
-    vi.mocked(userRepository.findAllUsers).mockResolvedValue([
-      User.with({
-        id: "123",
-        name: "Jane Doe",
-        email: "jane@example.com",
-        password: "hashedPassword",
-      }),
-    ]);
-
-    vi.mocked(userRepository.findByEmail).mockResolvedValue(null);
-    vi.mocked(userRepository.save).mockImplementation(async (user) => user);
-
-    const result = await createUserUseCase.execute(input);
-    expect(result).toBeInstanceOf(User);
-    expect(result.email).toBe(input.email);
-    expect(result.name).toBe(input.name);
     expect(userRepository.findByEmail).toHaveBeenCalledWith(input.email);
   });
 });
