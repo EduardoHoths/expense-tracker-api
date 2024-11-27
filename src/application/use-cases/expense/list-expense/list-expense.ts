@@ -1,5 +1,6 @@
 import { Expense } from "../../../../domain/entities/expense/expense";
 import { ExpenseRepository } from "../../../../domain/interfaces/expense-repository";
+import { DateUtils } from "../../../../utils/date-utils";
 import { UseCase } from "../../../usecase";
 
 export enum Filter {
@@ -31,8 +32,6 @@ export class ListExpensesUseCase
   }: ListExpenseInputDTO): Promise<ListExpenseOutputDTO> {
     const expenses = await this.expenseRepository.findExpensesByUserId(userId);
 
-    const now = new Date();
-
     if (!filter) {
       return expenses;
     }
@@ -40,22 +39,22 @@ export class ListExpensesUseCase
     switch (filter) {
       case Filter.LAST_WEEK:
         return expenses.filter((expense) => {
-          const oneWeekAgo = new Date(now);
-          oneWeekAgo.setDate(now.getDate() - 7);
+          const oneWeekAgo = DateUtils.daysBeforetoday(7);
+
           return expense.date >= oneWeekAgo;
         });
 
       case Filter.LAST_MONTH:
         return expenses.filter((expense) => {
-          const oneMonthAgo = new Date(now);
-          oneMonthAgo.setMonth(now.getMonth() - 1);
+          const oneMonthAgo = DateUtils.daysBeforetoday(30);
+
           return expense.date >= oneMonthAgo;
         });
 
       case Filter.LAST_3_MONTHS:
         return expenses.filter((expense) => {
-          const threeMonthsAgo = new Date(now);
-          threeMonthsAgo.setMonth(now.getMonth() - 3);
+          const threeMonthsAgo = DateUtils.daysBeforetoday(90);
+
           return expense.date >= threeMonthsAgo;
         });
 
@@ -65,6 +64,11 @@ export class ListExpensesUseCase
             "Start date and end date are required for custom filter"
           );
         }
+
+        if (startDate > endDate) {
+          throw new Error("Start date must be before end date");
+        }
+
         return expenses.filter(
           (expense) => expense.date >= startDate && expense.date <= endDate
         );
