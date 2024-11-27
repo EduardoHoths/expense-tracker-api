@@ -6,6 +6,7 @@ import { expenseRoutes } from "./routes/expense/expense-routes";
 import { authRoutes } from "./routes/auth/auth-routes";
 import { swaggerSpec } from "../config/swagger";
 import http from "http";
+import cors from 'cors'
 
 export default class Server {
   public app: express.Application;
@@ -19,6 +20,7 @@ export default class Server {
 
   private configureMiddlewares() {
     this.app.use(bodyParser.json());
+    this.app.use(cors())
   }
 
   private configureRoutes() {
