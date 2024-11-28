@@ -15,6 +15,7 @@ export const expressAdapter = (
         cookies: req.cookies ? { ...req.cookies } : undefined,
         method: req.method,
         url: req.url,
+        user: req.user,
       };
 
       const result = await controller(httpRequest);

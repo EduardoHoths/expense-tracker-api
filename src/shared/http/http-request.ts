@@ -7,4 +7,8 @@ export interface HttpRequest {
   files?: Record<string, any>;
   method?: string;
   url?: string;
+  user?: {
+    id: string;
+    email: string;
+  };
 }

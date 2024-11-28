@@ -1,6 +1,7 @@
 import { Expense } from "../../../../domain/entities/expense/expense";
 import { ExpenseRepository } from "../../../../domain/interfaces/expense-repository";
 import { DateUtils } from "../../../../utils/date-utils";
+import { FilterDateError } from "../../../errors/expense/date-error";
 import { UseCase } from "../../../usecase";
 
 export enum Filter {
@@ -60,13 +61,13 @@ export class ListExpensesUseCase
 
       case Filter.CUSTOM:
         if (!startDate || !endDate) {
-          throw new Error(
+          throw new FilterDateError(
             "Start date and end date are required for custom filter"
           );
         }
 
         if (startDate > endDate) {
-          throw new Error("Start date must be before end date");
+          throw new FilterDateError("Start date must be before end date");
         }
 
         return expenses.filter(

@@ -4,9 +4,12 @@ import { ExpenseCategory } from "../../../domain/entities/expense/expense-catego
 import { HttpRequest } from "../../../shared/http/http-request";
 import { HttpResponse } from "../../../shared/http/http-response";
 import { Validator } from "../../../shared/validation/validator";
-import { TokenService } from "../../../domain/interfaces/token-generator";
 import HttpStatusCode from "../../../infra/http/types/http-status-code";
 import { ControllerErrorHandler } from "../../errors/controller-error-handler";
+import {
+  Filter,
+  ListExpensesUseCase,
+} from "../../../application/use-cases/expense/list-expense/list-expense";
 
 interface CreateExpenseDTO {
   description: string;
@@ -15,32 +18,28 @@ interface CreateExpenseDTO {
   category: ExpenseCategory;
 }
 
+interface ListExpenseDTO {
+  filter?: string;
+  startDate?: string;
+  endDate?: string;
+}
+
 export class ExpenseController {
   constructor(
     private createExpenseUseCase: CreateExpenseUseCase,
     private createExpenseValidator: Validator<CreateExpenseDTO>,
-    private tokenService: TokenService
+    private listExpenseUseCase: ListExpensesUseCase,
+    private listExpenseValidator: Validator<ListExpenseDTO>
   ) {}
 
   createExpense = async (req: HttpRequest): Promise<HttpResponse> => {
     try {
-      const accessToken = req.headers?.authorization?.split(" ")[1];
-
-      if (!accessToken) {
-        return {
-          statusCode: HttpStatusCode.UNAUTHORIZED,
-          body: { message: "Unauthorized" },
-        };
-      }
-
-      const { userId } = this.tokenService.verify(accessToken) as {
-        userId: string;
-      };
+      const userId = req.user!.id;
 
       const { description, amount, date, category } =
         this.createExpenseValidator.validate(req.body);
 
-      const Expense = await this.createExpenseUseCase.execute({
+      const expense = await this.createExpenseUseCase.execute({
         description,
         amount,
         date: new Date(date),
@@ -48,7 +47,7 @@ export class ExpenseController {
         userId,
       });
 
-      const responseBody = ExpensePresenter.toJSON(Expense);
+      const responseBody = ExpensePresenter.toJSON(expense);
 
       return {
         statusCode: HttpStatusCode.CREATED,
@@ -58,6 +57,38 @@ export class ExpenseController {
         },
       };
     } catch (error: any) {
+      return ControllerErrorHandler.handle(error);
+    }
+  };
+
+  listExpense = async (req: HttpRequest): Promise<HttpResponse> => {
+    try {
+      const userId = req.user!.id;
+
+      const { filter, startDate, endDate } = this.listExpenseValidator.validate(
+        req.query
+      ) as {
+        filter?: Filter;
+        startDate?: string;
+        endDate?: string;
+      };
+
+      const expenses = await this.listExpenseUseCase.execute({
+        userId,
+        filter,
+        startDate: startDate ? new Date(startDate) : undefined,
+        endDate: endDate ? new Date(endDate) : undefined,
+      });
+
+      const responseBody = expenses.map((expense) =>
+        ExpensePresenter.toJSON(expense)
+      );
+
+      return {
+        statusCode: HttpStatusCode.OK,
+        body: responseBody,
+      };
+    } catch (error) {
       return ControllerErrorHandler.handle(error);
     }
   };

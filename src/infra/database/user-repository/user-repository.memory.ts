@@ -1,5 +1,4 @@
 import { UserRepository } from "../../../domain/interfaces/user-repository";
-import { UserAlreadyExistsError } from "../../../application/errors/user/user-already-exists-error";
 import { User } from "../../../domain/entities/user/user";
 
 export class UserRepositoryMemory implements UserRepository {
@@ -18,12 +17,6 @@ export class UserRepositoryMemory implements UserRepository {
   }
 
   async save(user: User): Promise<User> {
-    const existingUser = this.users.find((u) => u.email === user.email);
-
-    if (existingUser) {
-      throw new UserAlreadyExistsError();
-    }
-
     this.users.push(user);
 
     return user;

@@ -1,6 +1,6 @@
 export class DateUtils {
   /**
-   * Returns a date object that represents the date 'days' days before today.
+   * Returns a date object that represents the date 'days' before today.
    * @param days - The number of days to subtract from today's date.
    */
   static daysBeforetoday(days: number): Date {

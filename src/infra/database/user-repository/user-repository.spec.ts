@@ -3,12 +3,15 @@ import { User } from "../../../domain/entities/user/user";
 
 import { UserRepositoryMemory } from "./user-repository.memory";
 import { UserRepository } from "../../../domain/interfaces/user-repository";
+import { CreateUserUseCase } from "../../../application/use-cases/user/create-user/create-user";
 
 describe("UserRepository", () => {
   let userRepository: UserRepository;
+  let createUserUseCase: CreateUserUseCase
 
   beforeEach(() => {
     userRepository = new UserRepositoryMemory();
+    createUserUseCase = new CreateUserUseCase(userRepository);
   });
 
   describe("save", () => {
@@ -19,7 +22,7 @@ describe("UserRepository", () => {
         password: "123456",
       });
 
-      const savedUser = await userRepository.save(user);
+      const savedUser = await createUserUseCase.execute(user);
 
       expect(savedUser).toBeDefined();
       expect(savedUser.id).toBeDefined();
@@ -41,9 +44,9 @@ describe("UserRepository", () => {
         password: "123456",
       });
 
-      await userRepository.save(user1);
+      await createUserUseCase.execute(user1);
 
-      await expect(userRepository.save(user2)).rejects.toThrow();
+      await expect(createUserUseCase.execute(user2)).rejects.toThrow();
     });
   });
 
@@ -61,7 +64,7 @@ describe("UserRepository", () => {
         password: "123456",
       });
 
-      await userRepository.save(user);
+      await createUserUseCase.execute(user);
 
       const foundUser = await userRepository.findByEmail("test@test.com");
 
@@ -78,7 +81,7 @@ describe("UserRepository", () => {
         password: "123456",
       });
 
-      await userRepository.save(user);
+      await createUserUseCase.execute(user);
 
       const foundUser = await userRepository.findByUserId(user.id);
 

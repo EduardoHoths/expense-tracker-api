@@ -1,16 +1,15 @@
 import { Router } from "express";
 import { ExpenseController } from "../../../../../interfaces/controllers/expense/expense-controller";
 import { CreateExpenseUseCase } from "../../../../../application/use-cases/expense/create-expense/create-expense";
-import { JwtService } from "../../../../services/jwt-service";
-
-// Validator
-import { createExpenseValidator } from "../../../../../validation/expense/expense-validator.zod";
+import {
+  createExpenseValidator,
+  listExpenseValidator,
+} from "../../../../../validation/expense/expense-validator.zod";
 import { expressAdapter } from "../../adapters/express-adapter";
 import { createUserRepository } from "../../../../database/user-repository/user-repository-factory";
 import { createExpenseRepository } from "../../../../database/expense-repository/expense-repository-factory";
-
-// Token Generator
-const tokenService = new JwtService();
+import { AuthMiddleware } from "../../middlewares/auth-middleware";
+import { ListExpensesUseCase } from "../../../../../application/use-cases/expense/list-expense/list-expense";
 
 // Repositories
 const userRepository = createUserRepository();
@@ -22,15 +21,31 @@ const createExpenseUseCase = new CreateExpenseUseCase(
   userRepository
 );
 
+const listExpenseUseCase = new ListExpensesUseCase(expenseRepository);
+
 // Controllers
 const expenseController = new ExpenseController(
   createExpenseUseCase,
   createExpenseValidator,
-  tokenService
+  listExpenseUseCase,
+  listExpenseValidator
 );
+
+const authMiddleware = new AuthMiddleware();
 
 // Routes
 const expenseRoutes = Router();
-expenseRoutes.post("/create", expressAdapter(expenseController.createExpense));
+
+expenseRoutes.post(
+  "/create",
+  authMiddleware.execute.bind(authMiddleware),
+  expressAdapter(expenseController.createExpense)
+);
+
+expenseRoutes.get(
+  "/list",
+  authMiddleware.execute.bind(authMiddleware),
+  expressAdapter(expenseController.listExpense)
+);
 
 export { expenseRoutes };

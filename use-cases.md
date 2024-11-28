@@ -27,10 +27,10 @@
 
 **Description**: User can list and filter their past expenses.
 
-- [ ] Authentication required to list expenses
-- [ ] Return expenses only from authenticated user
-- [ ] Support for date filters (week, month, quarter, custom)
-- [ ] Return empty list if no expenses in the period
+- [x] Authentication required to list expenses
+- [x] Return expenses only from authenticated user
+- [x] Support for date filters (week, month, quarter, custom)
+- [x] Return empty list if no expenses in the period
 
 ## Use Case 5: Update Expense
 
