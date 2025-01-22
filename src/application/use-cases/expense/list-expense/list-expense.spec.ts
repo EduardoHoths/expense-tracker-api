@@ -36,6 +36,8 @@ describe("ListExpensesUseCase", () => {
   const mockExpenseRepository: ExpenseRepository = {
     save: vi.fn(),
     findExpensesByUserId: vi.fn(),
+    findExpenseById: vi.fn(),
+    updateExpense: vi.fn(),
   };
 
   let listExpensesUseCase: ListExpensesUseCase;

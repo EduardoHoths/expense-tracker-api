@@ -4,9 +4,9 @@ import bodyParser from "body-parser";
 import { userRoutes } from "./routes/user/user-routes";
 import { expenseRoutes } from "./routes/expense/expense-routes";
 import { authRoutes } from "./routes/auth/auth-routes";
-import { swaggerSpec } from "../config/swagger";
+import { swaggerDocument } from "../config/swagger";
 import http from "http";
-import cors from 'cors'
+import cors from "cors";
 
 export default class Server {
   public app: express.Application;
@@ -20,14 +20,18 @@ export default class Server {
 
   private configureMiddlewares() {
     this.app.use(bodyParser.json());
-    this.app.use(cors())
+    this.app.use(cors());
   }
 
   private configureRoutes() {
     this.app.use("/users", userRoutes);
     this.app.use("/expenses", expenseRoutes);
     this.app.use("/auth", authRoutes);
-    this.app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+    this.app.use(
+      "/api-docs",
+      swaggerUi.serve,
+      swaggerUi.setup(swaggerDocument)
+    );
   }
 
   public start() {

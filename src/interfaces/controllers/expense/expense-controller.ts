@@ -10,6 +10,7 @@ import {
   Filter,
   ListExpensesUseCase,
 } from "../../../application/use-cases/expense/list-expense/list-expense";
+import { UpdateExpenseUseCase } from "../../../application/use-cases/expense/update-expense/update-expense";
 
 interface CreateExpenseDTO {
   description: string;
@@ -29,7 +30,8 @@ export class ExpenseController {
     private createExpenseUseCase: CreateExpenseUseCase,
     private createExpenseValidator: Validator<CreateExpenseDTO>,
     private listExpenseUseCase: ListExpensesUseCase,
-    private listExpenseValidator: Validator<ListExpenseDTO>
+    private listExpenseValidator: Validator<ListExpenseDTO>,
+    private updateExpenseUseCase: UpdateExpenseUseCase
   ) {}
 
   createExpense = async (req: HttpRequest): Promise<HttpResponse> => {
@@ -87,6 +89,42 @@ export class ExpenseController {
       return {
         statusCode: HttpStatusCode.OK,
         body: responseBody,
+      };
+    } catch (error) {
+      return ControllerErrorHandler.handle(error);
+    }
+  };
+
+  updateExpense = async (req: HttpRequest): Promise<HttpResponse> => {
+    try {
+      const userId = req.user!.id;
+
+      const { id } = req.params as { id: string };
+
+      const { description, amount, date, category } = req.body as {
+        description: string;
+        amount: number;
+        date: Date;
+        category: ExpenseCategory;
+      };
+
+      const expense = await this.updateExpenseUseCase.execute({
+        description,
+        amount,
+        date,
+        category,
+        userId,
+        expenseId: id,
+      });
+
+      const responseBody = ExpensePresenter.toJSON(expense);
+
+      return {
+        statusCode: HttpStatusCode.OK,
+        body: {
+          message: "Expense updated successfully",
+          expense: responseBody,
+        },
       };
     } catch (error) {
       return ControllerErrorHandler.handle(error);

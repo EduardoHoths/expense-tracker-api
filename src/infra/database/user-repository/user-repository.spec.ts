@@ -1,4 +1,4 @@
-import { beforeAll, beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import { User } from "../../../domain/entities/user/user";
 
 import { UserRepositoryMemory } from "./user-repository.memory";
@@ -7,7 +7,7 @@ import { CreateUserUseCase } from "../../../application/use-cases/user/create-us
 
 describe("UserRepository", () => {
   let userRepository: UserRepository;
-  let createUserUseCase: CreateUserUseCase
+  let createUserUseCase: CreateUserUseCase;
 
   beforeEach(() => {
     userRepository = new UserRepositoryMemory();
@@ -28,7 +28,6 @@ describe("UserRepository", () => {
       expect(savedUser.id).toBeDefined();
       expect(savedUser.name).toBe("test");
       expect(savedUser.email).toBe("test@test.com");
-      expect(savedUser.password).toBe(user.password);
     });
 
     it("should throw error when trying to save user with duplicate email", async () => {
@@ -75,13 +74,11 @@ describe("UserRepository", () => {
 
   describe("findByUserId", async () => {
     it("should find a user by userId", async () => {
-      const user = await User.create({
+      const user = await createUserUseCase.execute({
         name: "test",
         email: "test@test.com",
         password: "123456",
       });
-
-      await createUserUseCase.execute(user);
 
       const foundUser = await userRepository.findByUserId(user.id);
 

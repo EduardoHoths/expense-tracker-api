@@ -1,4 +1,4 @@
-import { PasswordService } from './../../../shared/services/password-service';
+import { PasswordService } from "./../../../shared/services/password-service";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { UserRepository } from "../../../domain/interfaces/user-repository";
 import { TokenService } from "../../../domain/interfaces/token-generator";
@@ -14,7 +14,6 @@ describe("AuthenticateUserUseCase", () => {
     userRepository = {
       save: vi.fn(),
       findByEmail: vi.fn(),
-      findAllUsers: vi.fn(),
       findByUserId: vi.fn(),
     };
 

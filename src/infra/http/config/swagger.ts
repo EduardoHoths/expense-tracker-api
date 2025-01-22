@@ -1,20 +1,22 @@
-import swaggerJSDoc from "swagger-jsdoc";
+import { swaggerRoutes } from "../express/routes/swagger";
 
-const options = {
-  definition: {
-    openapi: "3.0.0",
-    info: {
-      title: "API Documentation",
-      version: "1.0.0",
-      description: "API documentation for your project",
+export const swaggerDocument = {
+  openapi: "3.0.0",
+  info: {
+    title: "Expenses API",
+    description: "API for managing expenses",
+    version: "1.0.0",
+    contact: {
+      email: "eduardo.hoths@gmail.com",
     },
-    servers: [
-      {
-        url: "http://localhost:3000",
-      },
-    ],
   },
-  apis: ["**/*.ts"],
+  servers: [
+    {
+      url: "http://localhost:3000",
+      description: "Development server",
+    },
+  ],
+  paths: {
+    ...swaggerRoutes,
+  },
 };
-
-export const swaggerSpec = swaggerJSDoc(options);

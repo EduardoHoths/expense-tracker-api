@@ -64,4 +64,45 @@ describe("ExpenseRepositoryPrisma", () => {
       expect(expenses).toHaveLength(0);
     });
   });
+
+  describe("findExpenseById", () => {
+    it("should return the expense with the given id", async () => {
+      await userRepository.save(TEST_USER);
+
+      await expenseRepository.save(TEST_EXPENSE);
+
+      const expense = await expenseRepository.findExpenseById(TEST_EXPENSE.id);
+
+      expect(expense).toBeInstanceOf(Expense);
+      expect(expense?.id).toBe(TEST_EXPENSE.id);
+    });
+
+    it("should return null given an id that does not exist", async () => {
+      await userRepository.save(TEST_USER);
+
+      const expense = await expenseRepository.findExpenseById("test-id");
+
+      expect(expense).toBeNull();
+    });
+  });
+
+  describe("updateExpense", () => {
+    it("should update the expense with the given id", async () => {
+      await userRepository.save(TEST_USER);
+
+      await expenseRepository.save(TEST_EXPENSE);
+
+      await expenseRepository.updateExpense(TEST_EXPENSE.id, {
+        description: "Updated Expense",
+        amount: 2,
+      });
+
+      const updateExpense = await expenseRepository.findExpenseById(
+        TEST_EXPENSE.id
+      );
+
+      expect(updateExpense!.description).toBe("Updated Expense");
+      expect(updateExpense!.amount).toBe(2);
+    });
+  });
 });

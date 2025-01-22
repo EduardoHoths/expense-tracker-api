@@ -20,8 +20,8 @@ model User {
 
 model Expense {
   id          String   @id @default(uuid())
-  user_id     String
-  user        User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  userId     String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   date        DateTime
   amount      Float
   description String

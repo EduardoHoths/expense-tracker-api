@@ -10,7 +10,7 @@ export class ExpenseRepositoryPrisma implements ExpenseRepository {
     const expenseSaved = await this.prismaClient.expense.create({
       data: {
         id: expense.id,
-        user_id: expense.userId,
+        userId: expense.userId,
         description: expense.description,
         amount: expense.amount,
         date: expense.date,
@@ -19,11 +19,7 @@ export class ExpenseRepositoryPrisma implements ExpenseRepository {
     });
 
     return Expense.with({
-      id: expenseSaved.id,
-      userId: expenseSaved.user_id,
-      description: expenseSaved.description,
-      amount: expenseSaved.amount,
-      date: expenseSaved.date,
+      ...expenseSaved,
       category: expenseSaved.category as ExpenseCategory,
     });
   }
@@ -31,7 +27,7 @@ export class ExpenseRepositoryPrisma implements ExpenseRepository {
   async findExpensesByUserId(userId: string): Promise<Expense[] | []> {
     const expenses = await this.prismaClient.expense.findMany({
       where: {
-        user_id: userId,
+        userId,
       },
     });
 
@@ -41,13 +37,45 @@ export class ExpenseRepositoryPrisma implements ExpenseRepository {
 
     return expenses.map((expense) => {
       return Expense.with({
-        id: expense.id,
-        userId: expense.user_id,
-        description: expense.description,
-        amount: expense.amount,
-        date: expense.date,
+        ...expense,
         category: expense.category as ExpenseCategory,
       });
+    });
+  }
+
+  async findExpenseById(expenseId: string): Promise<Expense | null> {
+    const expense = await this.prismaClient.expense.findUnique({
+      where: {
+        id: expenseId,
+      },
+    });
+
+    if (!expense) {
+      return null;
+    }
+
+    return Expense.with({
+      ...expense,
+      category: expense.category as ExpenseCategory,
+    });
+  }
+
+  async updateExpense(
+    expenseId: string,
+    fieldsToUpdate: Partial<Expense>
+  ): Promise<Expense> {
+    const expense = await this.prismaClient.expense.update({
+      where: {
+        id: expenseId,
+      },
+      data: {
+        ...fieldsToUpdate,
+      },
+    });
+
+    return Expense.with({
+      ...expense,
+      category: expense.category as ExpenseCategory,
     });
   }
 }

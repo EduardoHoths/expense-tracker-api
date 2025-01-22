@@ -2,7 +2,7 @@ import { UserRepository } from "../../../domain/interfaces/user-repository";
 import { User } from "../../../domain/entities/user/user";
 
 export class UserRepositoryMemory implements UserRepository {
-  private users: User[] = [];
+  public users: User[] = [];
 
   constructor() {
     this.users.push(

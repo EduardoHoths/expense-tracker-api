@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { ExpenseController } from "../../../../../interfaces/controllers/expense/expense-controller";
 import { CreateExpenseUseCase } from "../../../../../application/use-cases/expense/create-expense/create-expense";
+import { UpdateExpenseUseCase } from "../../../../../application/use-cases/expense/update-expense/update-expense";
 import {
   createExpenseValidator,
   listExpenseValidator,
@@ -23,12 +24,18 @@ const createExpenseUseCase = new CreateExpenseUseCase(
 
 const listExpenseUseCase = new ListExpensesUseCase(expenseRepository);
 
+const updateExpenseUseCase = new UpdateExpenseUseCase(
+  expenseRepository,
+  userRepository
+);
+
 // Controllers
 const expenseController = new ExpenseController(
   createExpenseUseCase,
   createExpenseValidator,
   listExpenseUseCase,
-  listExpenseValidator
+  listExpenseValidator,
+  updateExpenseUseCase
 );
 
 const authMiddleware = new AuthMiddleware();
@@ -46,6 +53,12 @@ expenseRoutes.get(
   "/list",
   authMiddleware.execute.bind(authMiddleware),
   expressAdapter(expenseController.listExpense)
+);
+
+expenseRoutes.patch(
+  "/update/:id",
+  authMiddleware.execute.bind(authMiddleware),
+  expressAdapter(expenseController.updateExpense)
 );
 
 export { expenseRoutes };
