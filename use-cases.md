@@ -36,10 +36,10 @@
 
 **Description**: User can update an existing expense.
 
-- [ ] Authentication required to update expense
-- [ ] Only possible to update user's own expenses
-- [ ] Apply the same validations from creation when updating
-- [ ] Return error if expense is not found
+- [x] Authentication required to update expense
+- [x] Only possible to update user's own expenses
+- [x] Apply the same validations from creation when updating
+- [x] Return error if expense is not found
   
 ## Use Case 6: Delete Expense
 

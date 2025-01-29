@@ -19,6 +19,13 @@ interface CreateExpenseDTO {
   category: ExpenseCategory;
 }
 
+interface UpdateExpenseDTO {
+  description?: string;
+  amount?: number;
+  date?: string;
+  category?: ExpenseCategory;
+}
+
 interface ListExpenseDTO {
   filter?: string;
   startDate?: string;
@@ -31,7 +38,8 @@ export class ExpenseController {
     private createExpenseValidator: Validator<CreateExpenseDTO>,
     private listExpenseUseCase: ListExpensesUseCase,
     private listExpenseValidator: Validator<ListExpenseDTO>,
-    private updateExpenseUseCase: UpdateExpenseUseCase
+    private updateExpenseUseCase: UpdateExpenseUseCase,
+    private updateExpenseValidator: Validator<UpdateExpenseDTO>
   ) {}
 
   createExpense = async (req: HttpRequest): Promise<HttpResponse> => {
@@ -101,17 +109,15 @@ export class ExpenseController {
 
       const { id } = req.params as { id: string };
 
-      const { description, amount, date, category } = req.body as {
-        description: string;
-        amount: number;
-        date: Date;
-        category: ExpenseCategory;
-      };
+      const { description, amount, date, category } =
+        this.updateExpenseValidator.validate(req.body);
+
+      const isNewDate = date && new Date(date);
 
       const expense = await this.updateExpenseUseCase.execute({
         description,
         amount,
-        date,
+        date: isNewDate ? isNewDate : undefined,
         category,
         userId,
         expenseId: id,

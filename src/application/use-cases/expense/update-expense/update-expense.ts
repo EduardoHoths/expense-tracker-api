@@ -2,14 +2,15 @@ import { Expense } from "../../../../domain/entities/expense/expense";
 import { ExpenseCategory } from "../../../../domain/entities/expense/expense-category";
 import { ExpenseRepository } from "../../../../domain/interfaces/expense-repository";
 import { UserRepository } from "../../../../domain/interfaces/user-repository";
+import { AppBaseError } from "../../../errors/app-error-base";
 import { UserNotFoundError } from "../../../errors/expense/user-not-found";
 import { UseCase } from "../../../usecase";
 
 interface UpdateExpenseInputDTO {
-  description: string;
-  amount: number;
-  date: Date;
-  category: ExpenseCategory;
+  description?: string;
+  amount?: number;
+  date?: Date;
+  category?: ExpenseCategory;
   userId: string;
   expenseId: string;
 }
@@ -41,7 +42,11 @@ export class UpdateExpenseUseCase
     const expense = await this.expenseRepository.findExpenseById(expenseId);
 
     if (!expense) {
-      throw new Error("Expense not found");
+      throw new AppBaseError({
+        message: "Expense not found",
+        statusCode: 404,
+        name: "ExpenseNotFoundError",
+      });
     }
 
     return await this.expenseRepository.updateExpense(expenseId, {

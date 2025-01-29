@@ -1,8 +1,8 @@
-import { afterAll, describe, expect, it } from "vitest";
+import { DateUtils } from "../../../../../utils/date-utils";
 import { ExpenseCategory } from "../../../../../domain/entities/expense/expense-category";
+import { afterAll, describe, expect, it } from "vitest";
 import Server from "../../server";
 import request from "supertest";
-import { DateUtils } from "../../../../../utils/date-utils";
 
 describe("Expense Routes", async () => {
   const server = new Server();
@@ -79,6 +79,37 @@ describe("Expense Routes", async () => {
       expect(response.body).toEqual(
         expect.objectContaining({
           message: "Token not provided",
+        })
+      );
+    });
+
+    it("should not create an expense with invalid amount", async () => {
+      const invalidExpenseData = { ...TEST_EXPENSE_DATA, amount: -100 };
+      const response = await request(app)
+        .post("/expenses/create")
+        .send(invalidExpenseData)
+        .set("Authorization", `Bearer ${authResponse.body.accessToken}`);
+
+      expect(response.status).toBe(400);
+      expect(response.body).toEqual(
+        expect.objectContaining({
+          message: "Invalid fields",
+          errors: expect.arrayContaining(["Amount must be a positive number"]),
+        })
+      );
+    });
+
+    it("should not create an expense with invalid date", async () => {
+      const invalidExpenseData = { ...TEST_EXPENSE_DATA, date: "invalid-date" };
+      const response = await request(app)
+        .post("/expenses/create")
+        .send(invalidExpenseData)
+        .set("Authorization", `Bearer ${authResponse.body.accessToken}`);
+
+      expect(response.status).toBe(400);
+      expect(response.body).toEqual(
+        expect.objectContaining({
+          message: "Invalid date format",
         })
       );
     });
@@ -253,4 +284,66 @@ describe("Expense Routes", async () => {
       );
     });
   });
+
+  describe("Update Expense Route", () => {
+    const TEST_EXPENSE_DATA = {
+      description: "Test Update Expense",
+      amount: 100,
+      date: new Date("2020-01-01"),
+      category: ExpenseCategory.HEALTH,
+      userId: "1",
+      id: "1",
+    };
+
+    it("should update a expense", async () => {
+      const response = await request(app)
+        .patch(`/expenses/update/${TEST_EXPENSE_DATA.id}`)
+        .send(TEST_EXPENSE_DATA)
+        .set("Authorization", `Bearer ${authResponse.body.accessToken}`);
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual({
+        message: "Expense updated successfully",
+        expense: {
+          id: "1",
+          description: "Test Update Expense",
+          amount: 100,
+          date: "2020-01-01T00:00:00.000Z",
+          category: ExpenseCategory.HEALTH,
+          userId: "1",
+        },
+      });
+    });
+
+    it("should not update a expense with invalid id", async () => {
+      const response = await request(app)
+        .patch("/expenses/update/6")
+        .send(TEST_EXPENSE_DATA)
+        .set("Authorization", `Bearer ${authResponse.body.accessToken}`);
+
+      expect(response.status).toBe(404);
+      expect(response.body).toEqual(
+        expect.objectContaining({
+          message: "Expense not found",
+        })
+      );
+    });
+
+    it("should not update a expense without token provided", async () => {
+      const response = await request(app).patch(
+        `/expenses/update/${TEST_EXPENSE_DATA.id}`
+      );
+
+      expect(response.status).toBe(401);
+      expect(response.body).toEqual(
+        expect.objectContaining({
+          message: "Token not provided",
+        })
+      );
+    });
+  });
+
+  // describe("Delete Expense Route", () => {
+
+  // })
 });

@@ -17,7 +17,7 @@ export class ExpenseRepositoryMemory implements ExpenseRepository {
         userId: "1",
       }),
       Expense.with({
-        id: "1",
+        id: "2",
         description: "Last Month",
         amount: 100,
         date: DateUtils.daysBeforetoday(30),
@@ -25,7 +25,7 @@ export class ExpenseRepositoryMemory implements ExpenseRepository {
         userId: "1",
       }),
       Expense.with({
-        id: "1",
+        id: "3",
         description: "Last 3 Months",
         amount: 100,
         date: DateUtils.daysBeforetoday(90),

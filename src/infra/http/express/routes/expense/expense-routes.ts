@@ -5,6 +5,7 @@ import { UpdateExpenseUseCase } from "../../../../../application/use-cases/expen
 import {
   createExpenseValidator,
   listExpenseValidator,
+  updateExpenseValidator
 } from "../../../../../validation/expense/expense-validator.zod";
 import { expressAdapter } from "../../adapters/express-adapter";
 import { createUserRepository } from "../../../../database/user-repository/user-repository-factory";
@@ -35,7 +36,8 @@ const expenseController = new ExpenseController(
   createExpenseValidator,
   listExpenseUseCase,
   listExpenseValidator,
-  updateExpenseUseCase
+  updateExpenseUseCase,
+  updateExpenseValidator
 );
 
 const authMiddleware = new AuthMiddleware();
