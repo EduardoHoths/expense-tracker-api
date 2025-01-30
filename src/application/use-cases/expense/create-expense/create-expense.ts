@@ -2,7 +2,7 @@ import { Expense } from "../../../../domain/entities/expense/expense";
 import { ExpenseCategory } from "../../../../domain/entities/expense/expense-category";
 import { ExpenseRepository } from "../../../../domain/interfaces/expense-repository";
 import { UserRepository } from "../../../../domain/interfaces/user-repository";
-import { UserNotFoundError } from "../../../errors/expense/user-not-found";
+import { UserNotFoundError } from "../../../errors/user/user-not-found";
 import { UseCase } from "../../../usecase";
 
 interface CreateExpenseInputDTO {

@@ -12,6 +12,7 @@ import { createUserRepository } from "../../../../database/user-repository/user-
 import { createExpenseRepository } from "../../../../database/expense-repository/expense-repository-factory";
 import { AuthMiddleware } from "../../middlewares/auth-middleware";
 import { ListExpensesUseCase } from "../../../../../application/use-cases/expense/list-expense/list-expense";
+import { DeleteExpenseUseCase } from "../../../../../application/use-cases/expense/delete-expense/delete-expense";
 
 // Repositories
 const userRepository = createUserRepository();
@@ -30,6 +31,11 @@ const updateExpenseUseCase = new UpdateExpenseUseCase(
   userRepository
 );
 
+const deleteExpenseUseCase = new DeleteExpenseUseCase(
+  expenseRepository,
+  userRepository
+);
+
 // Controllers
 const expenseController = new ExpenseController(
   createExpenseUseCase,
@@ -37,7 +43,8 @@ const expenseController = new ExpenseController(
   listExpenseUseCase,
   listExpenseValidator,
   updateExpenseUseCase,
-  updateExpenseValidator
+  updateExpenseValidator,
+  deleteExpenseUseCase
 );
 
 const authMiddleware = new AuthMiddleware();
@@ -61,6 +68,12 @@ expenseRoutes.patch(
   "/update/:id",
   authMiddleware.execute.bind(authMiddleware),
   expressAdapter(expenseController.updateExpense)
+);
+
+expenseRoutes.delete(
+  "/delete/:id",
+  authMiddleware.execute.bind(authMiddleware),
+  expressAdapter(expenseController.deleteExpense)
 );
 
 export { expenseRoutes };

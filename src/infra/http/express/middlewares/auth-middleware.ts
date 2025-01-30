@@ -5,9 +5,6 @@ import { ControllerErrorHandler } from "../../../../interfaces/errors/controller
 
 export class AuthMiddleware {
   public execute(req: Request, res: Response, next: NextFunction) {
-    req.query
-
-
     const authHeader = req.headers.authorization;
     if (!authHeader) {
       res.status(401).json({

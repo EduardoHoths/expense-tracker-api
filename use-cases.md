@@ -45,14 +45,14 @@
 
 **Description**: User can delete an existing expense.
 
-- [ ] Authentication required to delete expense
-- [ ] Only possible to delete user's own expenses
-- [ ] Return error if expense is not found
+- [x] Authentication required to delete expense
+- [x] Only possible to delete user's own expenses
+- [x] Return error if expense is not found
 
 ## Use Case 7: JWT Authentication
 
 **Description**: The application must use JWT to authenticate users and protect endpoints.
 
-- [ ] JWT required for all expense endpoints <!-- add a middleware to check for JWT -->
-- [ ] JWT must have configurable expiration
-- [ ] JWT token invalidation after logout or expiration
+- [x] JWT required for all expense endpoints <!-- add a middleware to check for JWT -->
+- [x] JWT must have configurable expiration
+- [x] JWT token invalidation after logout or expiration

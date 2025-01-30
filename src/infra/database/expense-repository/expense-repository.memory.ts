@@ -1,3 +1,4 @@
+import { AppBaseError } from "../../../application/errors/app-error-base";
 import { Expense } from "../../../domain/entities/expense/expense";
 import { ExpenseCategory } from "../../../domain/entities/expense/expense-category";
 import { ExpenseRepository } from "../../../domain/interfaces/expense-repository";
@@ -77,5 +78,13 @@ export class ExpenseRepositoryMemory implements ExpenseRepository {
     this.expenses[index] = validatedExpense;
 
     return validatedExpense;
+  }
+
+  async deleteExpenseById(expenseId: string): Promise<void> {
+    const expenses = this.expenses.filter(
+      (expense) => expense.id !== expenseId
+    );
+
+    this.expenses = expenses;
   }
 }

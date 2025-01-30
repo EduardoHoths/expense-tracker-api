@@ -78,4 +78,12 @@ export class ExpenseRepositoryPrisma implements ExpenseRepository {
       category: expense.category as ExpenseCategory,
     });
   }
+
+  async deleteExpenseById(expenseId: string): Promise<void> {
+    await this.prismaClient.expense.delete({
+      where: {
+        id: expenseId,
+      },
+    });
+  }
 }

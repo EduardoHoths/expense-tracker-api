@@ -5,4 +5,5 @@ export interface ExpenseRepository {
   findExpensesByUserId(userId: string): Promise<Expense[]>;
   findExpenseById(expenseId: string): Promise<Expense | null>;
   updateExpense(expenseId: string, fieldsToUpdate: Partial<Expense>): Promise<Expense>;
+  deleteExpenseById(expenseId: string): Promise<void>;
 }

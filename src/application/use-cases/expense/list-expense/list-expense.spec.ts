@@ -38,6 +38,7 @@ describe("ListExpensesUseCase", () => {
     findExpensesByUserId: vi.fn(),
     findExpenseById: vi.fn(),
     updateExpense: vi.fn(),
+    deleteExpenseById: vi.fn(),
   };
 
   let listExpensesUseCase: ListExpensesUseCase;

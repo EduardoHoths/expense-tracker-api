@@ -11,6 +11,7 @@ import {
   ListExpensesUseCase,
 } from "../../../application/use-cases/expense/list-expense/list-expense";
 import { UpdateExpenseUseCase } from "../../../application/use-cases/expense/update-expense/update-expense";
+import { DeleteExpenseUseCase } from "../../../application/use-cases/expense/delete-expense/delete-expense";
 
 interface CreateExpenseDTO {
   description: string;
@@ -39,7 +40,8 @@ export class ExpenseController {
     private listExpenseUseCase: ListExpensesUseCase,
     private listExpenseValidator: Validator<ListExpenseDTO>,
     private updateExpenseUseCase: UpdateExpenseUseCase,
-    private updateExpenseValidator: Validator<UpdateExpenseDTO>
+    private updateExpenseValidator: Validator<UpdateExpenseDTO>,
+    private deleteExpenseUseCase: DeleteExpenseUseCase
   ) {}
 
   createExpense = async (req: HttpRequest): Promise<HttpResponse> => {
@@ -130,6 +132,28 @@ export class ExpenseController {
         body: {
           message: "Expense updated successfully",
           expense: responseBody,
+        },
+      };
+    } catch (error) {
+      return ControllerErrorHandler.handle(error);
+    }
+  };
+
+  deleteExpense = async (req: HttpRequest): Promise<HttpResponse> => {
+    try {
+      const userId = req.user!.id;
+
+      const { id } = req.params as { id: string };
+
+      await this.deleteExpenseUseCase.execute({
+        userId,
+        id,
+      });
+
+      return {
+        statusCode: HttpStatusCode.OK,
+        body: {
+          message: "Expense deleted successfully",
         },
       };
     } catch (error) {

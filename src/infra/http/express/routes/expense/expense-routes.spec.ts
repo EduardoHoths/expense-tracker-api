@@ -343,7 +343,41 @@ describe("Expense Routes", async () => {
     });
   });
 
-  // describe("Delete Expense Route", () => {
+  describe("Delete Expense Route", () => {
+    it("should delete a expense", async () => {
+      const response = await request(app)
+        .delete(`/expenses/delete/1`)
+        .set("Authorization", `Bearer ${authResponse.body.accessToken}`);
 
-  // })
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual({
+        message: "Expense deleted successfully"
+      });
+    });
+
+    it("should not delete a expense with invalid id", async () => {
+      const response = await request(app)
+        .delete("/expenses/delete/999")
+        .set("Authorization", `Bearer ${authResponse.body.accessToken}`);
+
+      expect(response.status).toBe(404);
+      expect(response.body).toEqual(
+        expect.objectContaining({
+          message: "Expense not found"
+        })
+      );
+    });
+
+    it("should not delete a expense without token provided", async () => {
+      const response = await request(app)
+        .delete("/expenses/delete/1");
+
+      expect(response.status).toBe(401);
+      expect(response.body).toEqual(
+        expect.objectContaining({
+          message: "Token not provided"
+        })
+      );
+    });
+  });
 });
